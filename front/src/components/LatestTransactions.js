@@ -54,7 +54,7 @@ export default function LatestTransactions() {
 
 
    
-     useEffect(() => {
+    useEffect(() => {
     const fromList = [];
     const toList = [];
     const typeList = [];
