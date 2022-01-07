@@ -2,7 +2,7 @@ import { HStack, Text } from "@chakra-ui/layout";
 import styled from "styled-components";
 import kakaoTalk from "../assets/kakaoTalk.png";
 import {useEffect, useState} from "react";
-
+import axios from 'axios';
 const Table = styled.table`
   width: 100%;
 `;
@@ -52,36 +52,35 @@ export default function LatestTransactions() {
     const [dateList, setDateListState] = useState(["Not Found"]);
     const [hashList, setHashListState] = useState(["Not Found"]);
 
-    useEffect(() => {
-        const fromList = [];
-        const toList = [];
-        const typeList = [];
-        const valueList = [];
-        const dateList = [];
-        const hashList = [];
-        const requestOpt = getRequest();
-        fetch("http://localhost:5000/api/viewAll", requestOpt)
-            .then((response) => response.json())
-            .then((jsons) => {
-            console.log(jsons);
-            for(let i = 1; i <= Object.keys(jsons).length; i++) {
-            
-            fromList.push(jsons[i].from);
-            toList.push(jsons[i].to);
-            typeList.push(jsons[i].type);
-            valueList.push(jsons[i].value);
-            dateList.push(jsons[i].create_date);
-            hashList.push(jsons[i].hash);
-            
-            }
-            setFromListState(fromList);
-            setToListState(toList);
-            setTypeListState(typeList);
-            setValueListState(valueList);
-            setDateListState(dateList);
-            setHashListState(hashList);
+
+   
+     useEffect(() => {
+    const fromList = [];
+    const toList = [];
+    const typeList = [];
+    const valueList = [];
+    const dateList = [];
+    const hashList = [];
+    axios.get("http://localhost:5000/api/viewAll").then(function(response){
+          console.log(response.data);
+          for(let i = 1; i <= response.data.length; i++) {
+              fromList.push(response.data[i]?._from);
+              toList.push(response.data[i]?._to);
+              typeList.push(response.data[i]?._type);
+              valueList.push(response.data[i]?._point);
+              dateList.push(response.data[i]?._date);
+              hashList.push(response.data[i]?._hash);
+          }
+          setFromListState(fromList);
+          setToListState(toList);
+          setTypeListState(typeList);
+          setValueListState(valueList);
+          setDateListState(dateList);
+          setHashListState(hashList);
         });
     }, [])
+
+
 
   
   const view = ()=>{

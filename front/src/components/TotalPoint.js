@@ -1,33 +1,27 @@
 import { Text, HStack, Box, VStack } from "@chakra-ui/react";
 import {useState, useEffect} from "react"
 import { useWeb3React } from "@web3-react/core";
+import axios from 'axios';
 
-
-const getRequest = (jsons) => {
-    return {
-        method: "POST",
-        header: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Headers": "*",
-        },
-        body: JSON.stringify(jsons),
-    };
-};
 
 function TotalPoint() {
     const [pointArr, setPointArr] = useState([]);
     const {account} = useWeb3React();
 
     useEffect(() => {
-        //username를 생성하는 부분이 완성되면, 아래 fortest을 지우고 현재 로그인된 사용자의 username을 넣으면 됩니다. (성민)
-        let requestOpt = getRequest({"username":account});
-        fetch("http://localhost:5000/api/userInfo", requestOpt)
-            .then((response) => response.json())
-            .then((jsons) => {
-                setPointArr(pointArr.concat(jsons.pointA,jsons.pointB,jsons.pointC,jsons.pointD));
+        let isSubscribed = true
+        axios.get("http://localhost:5000/api/userinfo",{ 
+            params:{
+                    id:account}
+                })
+            .then(function(response){
+                console.log(response.data);
+                if(isSubscribed){
+                setPointArr(pointArr.concat(response.data._pointA,response.data._pointB,response.data._pointC,response.data._pointD));
+                }
             });
-    }, [])
+            return () => isSubscribed = false
+    }, []) 
 
     const sumTotalPoint = () => {
         let sumPoint = 0

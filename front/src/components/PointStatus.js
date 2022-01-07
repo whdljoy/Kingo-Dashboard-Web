@@ -1,31 +1,24 @@
 import { VStack, HStack, Text, useMediaQuery } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
+import axios from 'axios';
 
-const getRequest=(jsons)=>{
-    return{
-        method:'POST',
-        header:{
-            'Content-Type':'application/json',
-            "Access-Control-Allow-Origin":"*",
-            'Access-Control-Allow-Headers':"*"                
-        },
-        body:JSON.stringify(jsons)
-    }
-}
 
 function PointStatus() {
     const [pointArr, setPointArr] = useState([]);
     const {account} = useWeb3React();
 
     useEffect(() => {
-        let requestOpt = getRequest({"username":account});
-        fetch("http://localhost:5000/api/userInfo", requestOpt)
-            .then((response) => response.json())
-            .then((jsons) => {
-                setPointArr(pointArr.concat(jsons.pointA,jsons.pointB,jsons.pointC,jsons.pointD));
+        let isSubscribed = true
+        axios.get("http://localhost:5000/api/userInfo", { params: { id: account } })
+            .then(function(response){
+                if(isSubscribed){
+                setPointArr(pointArr.concat(response.data.pointA,response.data.pointB,response.data.pointC,response.data.pointD));
+                }
             });
-    }, [])
+            return () => isSubscribed = false
+    }, []) 
+ 
 
     const [isLessThan1195] = useMediaQuery("(max-width:1195px)");
     return (
