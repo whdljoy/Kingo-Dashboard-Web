@@ -27,10 +27,8 @@
         (Block들이 실제로 Transaction 되었는지 확인 할 수 있는 페이지로 재구성 DB 수정 필요)
     - [ ] IFPS 저장 후 일정 주기 별로 Transaction 보내기 기능 구현 <br>
 
- **DB 상태** 
+ * **DB 상태** 
     <img src="https://user-images.githubusercontent.com/37110949/148679520-5216656b-f02d-4397-844e-c294d19a75d7.PNG" width ="300px" height="100px">
-
-    $ \downarrow $
 
     <img src="https://user-images.githubusercontent.com/37110949/148679585-f47ed9ea-4fa2-411d-9897-5f440d68a825.png" width ="300px" height="300px">   
     <img src="https://user-images.githubusercontent.com/37110949/148679604-fca82a68-764f-43cb-a949-e2191627e67c.png" width ="300px" height="300px">
