@@ -17,7 +17,7 @@ function TotalPoint() {
             .then(function(response){
                 console.log(response.data);
                 if(isSubscribed){
-                setPointArr(pointArr.concat(response.data._pointA,response.data._pointB,response.data._pointC,response.data._pointD));
+                setPointArr(pointArr.concat(response.data[0]._pointA,response.data[0]._pointB,response.data[0]._pointC,response.data[0]._pointD));
                 }
             });
             return () => isSubscribed = false

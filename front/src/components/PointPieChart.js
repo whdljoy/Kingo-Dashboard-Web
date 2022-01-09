@@ -15,7 +15,7 @@ function PointPieChart() {
         axios.get("http://localhost:5000/api/userInfo", { params: { id: account } })
             .then(function(response){
                 if(isSubscribed){
-                setPointArr(pointArr.concat(response.data.pointA,response.data.pointB,response.data.pointC,response.data.pointD));
+                setPointArr(pointArr.concat(response.data[0]._pointA,response.data[0]._pointB,response.data[0]._pointC,response.data[0]._pointD));
                 }
             });
             return () => isSubscribed = false
