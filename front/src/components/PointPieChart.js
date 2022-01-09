@@ -2,32 +2,24 @@ import { VStack, HStack, Text, useMediaQuery } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { ResponsiveContainer, PieChart, Pie } from "recharts";
 import { useWeb3React } from "@web3-react/core";
+import axios from 'axios';
 
-const getRequest = (jsons) => {
-    return {
-        method: "POST",
-        header: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Headers": "*",
-        },
-        body: JSON.stringify(jsons),
-    };
-};
+
 
 function PointPieChart() {
     const [pointArr, setPointArr] = useState([]);
     const {account} = useWeb3React();
 
     useEffect(() => {
-        //username를 생성하는 부분이 완성되면, 아래 fortest을 지우고 현재 로그인된 사용자의 username을 넣으면 됩니다. (성민)
-        let requestOpt = getRequest({"username":account});
-        fetch("http://localhost:5000/api/userInfo", requestOpt)
-            .then((response) => response.json())
-            .then((jsons) => {
-                setPointArr(pointArr.concat(jsons.pointA,jsons.pointB,jsons.pointC,jsons.pointD));
+        let isSubscribed = true
+        axios.get("http://localhost:5000/api/userInfo", { params: { id: account } })
+            .then(function(response){
+                if(isSubscribed){
+                setPointArr(pointArr.concat(response.data[0]._pointA,response.data[0]._pointB,response.data[0]._pointC,response.data[0]._pointD));
+                }
             });
-    }, [])
+            return () => isSubscribed = false
+    }, []) 
 
     const data = [
         {

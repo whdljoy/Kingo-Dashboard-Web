@@ -21,7 +21,7 @@ function App() {
             <Container maxW="full" bg="#E5E5E5" p={0}>
                 <Flex minH="100vh" h="full">
                     <BrowserRouter>
-                        {active ? (
+                    {active ? (
                             <Redirect to="/dashboard" />
                         ) : (
                             <Redirect to="/" />

@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan("combined"));
 
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT || 5000);
 
 // 모든 userinfo 테이블의 모든 정보 가져오기
 app.get("/users", (req, res) => {
@@ -43,7 +43,7 @@ app.get("/api/queryprac", function (req, res) {
 app.get("/api/transaction", (req, res) => {
   if (req.query.who === "all") {
     connection.query(
-      `SELECT * from userinfo where _to=${req.query.address} or _from=${req.query.address}`,
+      `SELECT * from transaction where _to=${req.query.address} or _from=${req.query.address}`,
       (err, rows, fields) => {
         if (err) throw err;
         res.json(rows);
@@ -51,7 +51,7 @@ app.get("/api/transaction", (req, res) => {
     );
   } else if (req.query.who === "to") {
     connection.query(
-      `SELECT * from userinfo where _to=${req.query.address}`,
+      `SELECT * from transaction where _to=${req.query.address}`,
       (err, rows, fields) => {
         if (err) throw err;
         res.json(rows);
@@ -59,7 +59,7 @@ app.get("/api/transaction", (req, res) => {
     );
   } else if (req.query.who === "from") {
     connection.query(
-      `SELECT * from userinfo where _from = ${req.query.address}`,
+      `SELECT * from transaction where _from = ${req.query.address}`,
       (err, rows, fields) => {
         if (err) throw err;
         res.json(rows);

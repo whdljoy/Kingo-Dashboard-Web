@@ -50,15 +50,15 @@ export default function MyTransactionsAll() {
     const valueList = [];
     const dateList = [];
     const hashList = [];
-    axios.post("http://localhost:5000/api/viewAll").then(function(response){
+    axios.get("http://localhost:5000/api/viewAll").then(function(response){
           console.log(response.data);
-          for(let i = 1; i <= Object.keys(response.data).length; i++) {
-            if(response.data[i].from == account) {
-              toList.push(response.data[i].to);
-              typeList.push(response.data[i].type);
-              valueList.push(response.data[i].value);
-              dateList.push(response.data[i].create_date);
-              hashList.push(response.data[i].hash);
+          for(let i = 1; i <= response.data.length; i++) {
+            if(response.data[i]?._from == account) {
+              toList.push(response.data[i].__type);
+              valueList.push(response.data[i]._to);
+              typeList.push(response.data[i].point);
+              dateList.push(response.data[i]._date);
+              hashList.push(response.data[i]._hash);
             }
           }
           setToListState(toList);
