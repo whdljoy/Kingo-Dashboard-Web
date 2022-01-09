@@ -20,8 +20,16 @@
 *  **필요 기능**   
     - [ ] 학교 통합 로그인 기능 구현
     - [ ] 제휴 사이트에서 3rd-party 로서 포인트 제공 기능 구현
-    - [ ] 가능하다면 3rd-party에서 Optional로 신뢰성보장을 위한 블록체인 사용(메타마스크 연계)로서의 웹사이트 기능 분리
-    - [ ] My 거래내역 페이지 그래프 구현(DB 재구성 필요)  
+    - [ ] 가능하다면 3rd-party에서 Optional로 
+    신뢰성 보장을 위한 블록체인 사용(메타마스크 연계)로서의 웹사이트 기능 분리
+    - [ ] My 거래내역 페이지 그래프 구현(DB 수정 필요)  
     - [ ] 전체 거래 내역 페이지 완전 재구성  
         (Block들이 실제로 Transaction 되었는지 확인 할 수 있는 페이지로 재구성 DB 수정 필요)
-    - [ ] IFPS 저장 후 일정 주기 별로 Transaction 보내기 기능 구현
+    - [ ] IFPS 저장 후 일정 주기 별로 Transaction 보내기 기능 구현 <br>
+
+    <img src="https://user-images.githubusercontent.com/37110949/148679520-5216656b-f02d-4397-844e-c294d19a75d7.PNG">
+
+    $ \downarrow $
+
+    <img src="https://user-images.githubusercontent.com/37110949/148679585-f47ed9ea-4fa2-411d-9897-5f440d68a825.png">   
+    <img src="https://user-images.githubusercontent.com/37110949/148679604-fca82a68-764f-43cb-a949-e2191627e67c.png">
