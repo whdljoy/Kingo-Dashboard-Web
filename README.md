@@ -1,9 +1,9 @@
 # Make Dashboard Website and Connect 3rd-party with affiliate site
 
-## 킹고 포인트와 관련하여 볼 수 있는 대시보드 웹사이트를 만들고 
-## 3rd-party 웹으로서 제휴사이트에서 메타마스크를 통한 신뢰성있는 포인트 제공을 위한 웹사이트 제작
+### 킹고 포인트와 관련하여 볼 수 있는 대시보드 웹사이트 제작
+### 3rd-party 웹으로서 제휴사이트에서 메타마스크를 통한 신뢰성있는 포인트 제공을 위한 웹사이트 제작
  
-*  **개발 환경**
+*  **개발 환경**  
         **Front-end**: React  
         **Back-end**: Express.js  
         **DB**: mysql  
