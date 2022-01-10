@@ -25,7 +25,7 @@
     - [ ] My 거래내역 페이지 그래프 구현(DB 수정 필요)  
     - [ ] 전체 거래 내역 페이지 완전 재구성  
         (Block들이 실제로 Transaction 되었는지 확인 할 수 있는 페이지로 재구성 DB 수정 필요)
-    - [ ] IFPS 저장 후 일정 주기 별로 Transaction 보내기 기능 구현 <br>
+    - [ ] IPFS 저장 후 일정 주기 별로 Transaction 보내기 기능 구현 <br>
 
  * **DB 상태**  <br> 
 
