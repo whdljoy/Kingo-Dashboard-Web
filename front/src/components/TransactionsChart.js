@@ -16,32 +16,27 @@ export default function TransactionsChart() {
     const [pointArr, setPointArr] = useState([]);
     const {account} = useWeb3React();
     const currentTime = new Date().getTime();  //current unix timestamp
-    const execTime = new Date().setHours(24,0,0,0);  //API call time = today at 20:00
+    const execTime = new Date().setHours(11,29,0,0);  //API call time = today at 20:00
     let timeLeft;
-    const todayFormal = () => {
-        let now = new Date();
-        let todayYear = now.getFullYear();
-        let todayMonth = (now.getMonth()+1) >9? (now.getMonth()+1) : '0' + (now.getMonth()+1);
-        let todayDate = now.getDate()>9 ? now.getDate() : '0' +now.getDate();
-        return todayYear+'-'+todayMonth+'-'+todayDate;
-    }
     if(currentTime < execTime) {
       //it's currently earlier than 20:00
       timeLeft = execTime - currentTime;
+      
     }
     else {
         //it's currently later than 20:00, schedule for tomorrow at 20:00
         timeLeft = execTime + 86400000 - currentTime
     }
-    setTimeout(function() {
-      setInterval(function() {
+    /*setTimeout(() => {
+      setInterval(() => {
             let isSubscribed = true
             axios.get("http://localhost:5000/api/userinfo",{ 
                 params:{
                         id:account}
                     })
                 .then(function(response){
-                    console.log(response.data);
+                    alert("correct")
+                    console.log('12345678');
                     if(isSubscribed){
                     setPointArr(pointArr.concat(response.data[0]._pointA,response.data[0]._pointB,response.data[0]._pointC,response.data[0]._pointD));
                     const sumTotalPoint = () => {
@@ -63,7 +58,41 @@ export default function TransactionsChart() {
                 return () => isSubscribed = false
  
       }, 86400000);  
-    }, timeLeft);  
+    }, timeLeft);*/
+    useEffect(() => {
+        let isSubscribed = true
+        axios.get("http://localhost:5000/api/userinfo",{ 
+            params:{
+                    id:account}
+                })
+            .then(function(response){
+                console.log(response.data);
+                if(isSubscribed){
+                    setPointArr(pointArr.concat(response.data[0]._pointA,response.data[0]._pointB,response.data[0]._pointC,response.data[0]._pointD));
+                }
+            });
+            return () => isSubscribed = false
+    }, [])   
+    const todayFormal = () => {
+        let now = new Date();
+        let todayYear = now.getFullYear();
+        let todayMonth = (now.getMonth()+1) >9? (now.getMonth()+1) : '0' + (now.getMonth()+1);
+        let todayDate = now.getDate()>9 ? now.getDate() : '0' +now.getDate();
+        return todayYear+'-'+todayMonth+'-'+todayDate;
+    }
+    const sumTotalPoint = () => {
+        let sumPoint = 0
+        for (let i = 0; i < pointArr.length; i++) {
+            sumPoint += pointArr[i]
+        }
+        for(let j=0;j< data.length-1;j++){
+            data[j].date=data[j+1].date;
+            data[j].point=data[j+1].point;
+        }
+        return sumPoint
+    }
+    data[data.length-1].date=todayFormal();
+    data[data.length-1].point=sumTotalPoint();
 
 
     return (

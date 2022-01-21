@@ -1,7 +1,7 @@
 import { Flex, HStack, Text, VStack, Box } from "@chakra-ui/layout";
 import LatestBlock from "../components/LatestBlocks";
 import LatestTransactions from "../components/LatestTransactions";
-import {useEffect, useState} from 'react';
+
 
 
 
@@ -14,7 +14,8 @@ function AllTransactions() {
                 전체 거래내역
             </Text>
 
-            {/* 그래프 */}
+            {/* graph */
+            }
 
             <VStack
                 w="full"
@@ -22,7 +23,6 @@ function AllTransactions() {
                 borderRadius="5px"
                 p={5}
                 marginTop={5}
-                borderRadius={20}
             >
                 <HStack justifyContent="space-between" w="full">
                     <Text color="#4318FF" fontWeight={700} fontSize="lg">
@@ -49,7 +49,6 @@ function AllTransactions() {
                 borderRadius="5px"
                 p={5}
                 marginTop={5}
-                borderRadius={20}
             >
                 <HStack justifyContent="space-between" w="full">
                     <Text color="#4318FF" fontWeight={700} fontSize="lg">
@@ -71,7 +70,8 @@ function AllTransactions() {
                 />
             </VStack>
 
-            {/* 거래내역 */}
+            {/* 거래내역 */
+            }          
         </Flex>
     );
 }

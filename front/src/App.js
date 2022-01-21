@@ -27,25 +27,22 @@ function App() {
                             <Redirect to="/" />
                         )}
                         {active ? <NavBar /> : <></>}
-                        <Route exact="true" path="/" component={Login} />
+                        <Route 
+                            exact path="/" component={Login} />
                         <Route
-                            exact="true"
-                            path="/dashboard"
+                            exact path="/dashboard"
                             component={DashBoard}
                         />
                         <Route
-                            exact="true"
-                            path="/my-transactions"
+                            exact path="/my-transactions"
                             component={MyTransactions}
                         />
                         <Route
-                            exact="true"
-                            path="/all-transactions"
+                            exact path="/all-transactions"
                             component={AllTransactions}
                         />
                         <Route
-                            exact="true"
-                            path="/admin-page"
+                            exact path="/admin-page"
                             component={AdminPage}
                         />
                     </BrowserRouter>

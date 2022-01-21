@@ -54,7 +54,7 @@ export default function MyTransactionsAll() {
           console.log(response.data[1]._from);
           for(let i = 1; i <= response.data.length; i++) {
             if(response.data[i]?._from == account || response.data[i]?._to == account) {
-              fromList.push(response.data[i]._from);
+              fromList.push(response.data[i]?._from);
               toList.push(response.data[i]._to);
               typeList.push(response.data[i]._type);
               valueList.push(response.data[i]._point);

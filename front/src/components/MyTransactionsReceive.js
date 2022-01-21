@@ -33,7 +33,7 @@ const Time = styled.td`
 `;
 
 
-export default function MyTransactionsAll() {
+export default function MyTransactionsReceive() {
   const [fromListState, setFromListState] = useState(["Not Found"]);
   const [toListState, setToListState] = useState(["Not Found"]);
   const [typeListState, setTypeListState] = useState(["Not Found"]);
@@ -51,9 +51,9 @@ export default function MyTransactionsAll() {
     const dateList = [];
     const hashList = [];
     axios.get("http://localhost:5000/api/viewAll").then(function(response){
+      console.log(response.data[0]._from);
       for (let i = 1; i <= response.data.length; i++) {
         if (response.data[i]?._to == account) {
-          console.log(response.data);
           fromList.push(response.data[i]._from);
           typeList.push(response.data[i]._type);
           valueList.push(response.data[i]._point);
