@@ -71,28 +71,28 @@ export default function TransactionsChart() {
                     setPointArr(pointArr.concat(response.data[0]._pointA,response.data[0]._pointB,response.data[0]._pointC,response.data[0]._pointD));
                 }
             });
+            const todayFormal = () => {
+                let now = new Date();
+                let todayYear = now.getFullYear();
+                let todayMonth = (now.getMonth()+1) >9? (now.getMonth()+1) : '0' + (now.getMonth()+1);
+                let todayDate = now.getDate()>9 ? now.getDate() : '0' +now.getDate();
+                return todayYear+'-'+todayMonth+'-'+todayDate;
+            }
+            const sumTotalPoint = () => {
+                let sumPoint = 0
+                for (let i = 0; i < pointArr.length; i++) {
+                    sumPoint += pointArr[i]
+                }
+                for(let j=0;j< data.length-1;j++){
+                    data[j].date=data[j+1].date;
+                    data[j].point=data[j+1].point;
+                }
+                return sumPoint
+            }
+            data[data.length-1].date=todayFormal();
+            data[data.length-1].point=sumTotalPoint();
             return () => isSubscribed = false
     }, [])   
-    const todayFormal = () => {
-        let now = new Date();
-        let todayYear = now.getFullYear();
-        let todayMonth = (now.getMonth()+1) >9? (now.getMonth()+1) : '0' + (now.getMonth()+1);
-        let todayDate = now.getDate()>9 ? now.getDate() : '0' +now.getDate();
-        return todayYear+'-'+todayMonth+'-'+todayDate;
-    }
-    const sumTotalPoint = () => {
-        let sumPoint = 0
-        for (let i = 0; i < pointArr.length; i++) {
-            sumPoint += pointArr[i]
-        }
-        for(let j=0;j< data.length-1;j++){
-            data[j].date=data[j+1].date;
-            data[j].point=data[j+1].point;
-        }
-        return sumPoint
-    }
-    data[data.length-1].date=todayFormal();
-    data[data.length-1].point=sumTotalPoint();
 
 
     return (

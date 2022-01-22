@@ -51,7 +51,7 @@ export default function MyTransactionsReceive() {
     const dateList = [];
     const hashList = [];
     axios.get("http://localhost:5000/api/viewAll").then(function(response){
-      console.log(response.data[0]._from);
+      console.log(response.data[1]._from);
       for (let i = 1; i <= response.data.length; i++) {
         if (response.data[i]?._to == account) {
           fromList.push(response.data[i]._from);
