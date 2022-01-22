@@ -5,14 +5,13 @@ import MyTransactionsSend from "../components/MyTransactionsSend";
 import MyTransactionsReceive from "../components/MyTransactionsReceive";
 import TransactionsChart from "../components/TransactionsChart";
 
-function MySelect(props) {
-    const {select} =props;
-    if (select === 2) {
-        return MyTransactionsReceive();
-    } else if (select === 1) {
-        return MyTransactionsSend();
-    } else if(select === 0) {
-        return MyTransactionsAll();
+function MySelect({select}) {
+    if (select == 2) {
+        return <MyTransactionsReceive/>;
+    } else if (select == 1) {
+        return <MyTransactionsSend />;
+    } else if(select == 0) {
+        return <MyTransactionsAll/>;
     }
 }
 function MyTransactions() {
