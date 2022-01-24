@@ -1,30 +1,30 @@
 [
     {
         "date": "1/1",
-        "point": 2400
+        "point": 0
     },
     {
         "date": "1/2",
-        "point": 1398
+        "point": 0
     },
     {
         "date": "1/3",
-        "point": 9800
+        "point": 0
     },
     {
         "date": "1/4",
-        "point": 3908
+        "point": 0
     },
     {
         "date": "1/5",
-        "point": 4800
+        "point": 0
     },
     {
         "date": "1/6",
-        "point": 3800
+        "point": 0
     },
     {
         "date": "1/7",
-        "point": 4300
+        "point": 0
     }
 ]
