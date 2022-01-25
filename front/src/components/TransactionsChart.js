@@ -1,4 +1,6 @@
 import {useState, useEffect} from "react"
+import { useHistory } from "react-router";
+import { useLocation } from "react-router";
 import { useWeb3React } from "@web3-react/core";
 import axios from 'axios';
 import data from "../assets/data.json";
@@ -11,15 +13,17 @@ import {
     CartesianGrid,
     ResponsiveContainer,
 } from "recharts";
+import TotalPoint from "./TotalPoint";
 
 export default function TransactionsChart() {
+    const history = useHistory()
+    const location = useLocation();
     const [pointArr, setPointArr] = useState(0);
     const {account} = useWeb3React();
-
-    const getPosts = async () => {
+    const getData = async () => {
         let isSubscribed = true
         try {
-            axios.get("http://localhost:5000/api/userinfo",{ 
+            await axios.get("http://localhost:5000/api/userinfo",{ 
             params:{
                     id:account}
                 })
@@ -27,34 +31,61 @@ export default function TransactionsChart() {
                 console.log(response.data);
                 if(isSubscribed){
                     setPointArr(response.data[0]._pointA+response.data[0]._pointB+response.data[0]._pointC+response.data[0]._pointD);
+                    postData(response.data[0]._pointA+response.data[0]._pointB+response.data[0]._pointC+response.data[0]._pointD);
+                    history.push(`/my-transactions`);
+                   //location.reload();
                 }
-                changeChart(response.data[0]._pointA+response.data[0]._pointB+response.data[0]._pointC+response.data[0]._pointD)
             }); 
         } catch (err) {
           console.error(err.message);
         }
         return () => isSubscribed = false
       };
-    const changeChart = (point) => {
-        if(data[data.length-1].point == 0){
-            data[data.length-1].point = point;
-            data[data.length-1].date=new Date()
+    const postData = async (total_P) => {
+        console.log(total_P);
+        let isSubscribed = true
+        const form = new FormData();
+        form.append('_point', total_P);
+        try {
+            await axios.post("http://localhost:5000/api/createGraph",{ 
+                params:{
+                    id: account},
+                data:{
+                    form}
+                })
+            .then(function(response){
+                console.log(response.data);
+            }); 
+        } catch (err) {
+          console.error(err.message);
         }
-        else{
-            for (let j = 0; j < data.length-1; j++) {
-                data[j].point=data[j+1].point;
-                data[j].date=data[j+1].date;
-            }
-            data[data.length-1].point=point;
-            data[data.length-1].date=new Date()
+        return () => isSubscribed = false
+      };
+    const RegetData = async () => {
+        let isSubscribed = true
+        try {
+            await axios.get("http://localhost:5000/api/graph",{ 
+            params:{
+                    id:account}
+                })
+            .then(function(response){
+                console.log(response.data);
+                if(isSubscribed){
+            
+                }
+            }); 
+        } catch (err) {
+          console.error(err.message);
         }
-    }
+        return () => isSubscribed = false
+      };
     useEffect(()=>{    
-        getPosts()
+        getData()
+        RegetData()
         const interval=setInterval(()=>{
-          getPosts()
-
-         },86400000)
+          getData()
+          RegetData()
+         },20000)
          return()=>clearInterval(interval)
     },[])
 
