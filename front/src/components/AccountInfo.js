@@ -1,13 +1,4 @@
-import {
-    VStack,
-    Box,
-    Flex,
-    Text,
-    Button,
-    Link,
-    useMediaQuery,
-    Tooltip,
-} from "@chakra-ui/react";
+import {VStack,Box,Flex,Text,Button,Link,useMediaQuery,Tooltip,} from "@chakra-ui/react";
 import { useWeb3React } from "@web3-react/core";
 
 function AccountInfo() {

@@ -1,11 +1,4 @@
-import {
-    HStack,
-    Text,
-    VStack,
-    Flex,
-    Box,
-    useMediaQuery,
-} from "@chakra-ui/react";
+import { HStack,Text,VStack,Flex,Box,useMediaQuery,} from "@chakra-ui/react";
 import TotalPoint from "../components/TotalPoint";
 import PointStatus from "../components/PointStatus";
 import PointPieChart from "../components/PointPieChart";

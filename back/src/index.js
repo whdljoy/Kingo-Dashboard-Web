@@ -160,6 +160,55 @@ app.get("/api/userinfo", (req, res) => {
   );
 });
 
+app.get("/api/graph", (req, res) => {
+  connection.query(
+    `SELECT * from graph where _account="${req.query.id}"`,
+    (err, rows, fields) => {
+      if (err) throw err;
+      res.json(rows);
+    }
+  );
+});
+app.post("/api/createGraph", (req, res) => {
+  const _point = req.body._point;
+  const id = req.query.id;
+  let sql = `UPDATE graph set Today = (?) where _account="${id}"`;
+  let sql1 = `UPDATE graph set Day_6 = Day_5 where _account="${id}"`;
+  let sql2 = `UPDATE graph set Day_5 = Day_4 where _account="${id}"`;
+  let sql3 = `UPDATE graph set Day_4 = Day_3 where _account="${id}"`;
+  let sql4 = `UPDATE graph set Day_3 = Day_2 where _account="${id}"`;
+  let sql5 = `UPDATE graph set Day_2 = Day_1 where _account="${id}"`;
+  let sql6 = `UPDATE graph set Day_1 = Today where _account="${id}"`;
+
+  connection.query(sql1, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql2, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql3, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql4, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql5, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql6, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql,[_point], (err,data,fields) => {
+    if (err) throw err;
+    return res.json({ status: "300" });
+  });
+});
 // 그냥 연습용 api
 app.post("/api/tester", (req, res) => {
   const type = req.body.type;

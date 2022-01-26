@@ -55,29 +55,33 @@ export default function LatestTransactions() {
 
    
     useEffect(() => {
-    const fromList = [];
-    const toList = [];
-    const typeList = [];
-    const valueList = [];
-    const dateList = [];
-    const hashList = [];
-    axios.get("http://localhost:5000/api/viewAll").then(function(response){
-          console.log(response.data);
-          for(let i = 1; i <= response.data.length; i++) {
-              fromList.push(response.data[i]?._from);
-              toList.push(response.data[i]?._to);
-              typeList.push(response.data[i]?._type);
-              valueList.push(response.data[i]?._point);
-              dateList.push(response.data[i]?._date);
-              hashList.push(response.data[i]?._hash);
-          }
-          setFromListState(fromList);
-          setToListState(toList);
-          setTypeListState(typeList);
-          setValueListState(valueList);
-          setDateListState(dateList);
-          setHashListState(hashList);
-        });
+      let isSubscribed = true
+      const fromList = [];
+      const toList = [];
+      const typeList = [];
+      const valueList = [];
+      const dateList = [];
+      const hashList = [];
+      axios.get("http://localhost:5000/api/viewAll").then(function(response){
+            console.log(response.data);
+            for(let i = 1; i <= response.data.length; i++) {
+                fromList.push(response.data[i]?._from);
+                toList.push(response.data[i]?._to);
+                typeList.push(response.data[i]?._type);
+                valueList.push(response.data[i]?._point);
+                dateList.push(response.data[i]?._date);
+                hashList.push(response.data[i]?._hash);
+            }
+            if(isSubscribed){
+              setFromListState(fromList);
+              setToListState(toList);
+              setTypeListState(typeList);
+              setValueListState(valueList);
+              setDateListState(dateList);
+              setHashListState(hashList);
+            }
+          });
+          return () => isSubscribed = false
     }, [])
 
 
@@ -99,10 +103,8 @@ export default function LatestTransactions() {
       </tr>
     </thead>
     );
-    console.log(typeof dateList)
     if(typeof dateList === "object"){
       for(let i=0;i<dateList.length;i++){
-        // console.log('asd');
         result.push(
           <tr>
             <Td>
@@ -119,7 +121,6 @@ export default function LatestTransactions() {
           </tr>
         )
       }
-      console.log(result);
     }
     realResult.push(<tbody>{result}</tbody>);
 

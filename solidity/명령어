@@ -1,0 +1,5 @@
+스마트 컨트랙트 클레이튼 바오밥 네트워크에 배포할 때 쓰이는 명령어 입니다.
+
+truffle migrate --compile-all --reset --network klaytn
+
+node_modules 삭제하지 마시고 그대로 써주세요.

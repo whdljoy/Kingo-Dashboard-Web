@@ -18,7 +18,7 @@ function WalletConnect() {
                     메타마스크 설치하기
                 </Link>
                 <Box
-                    as="Button"
+                    as="button"
                     onClick={onClick}
                     h="40px"
                     borderRadius={20}
