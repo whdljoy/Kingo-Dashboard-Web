@@ -14,16 +14,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan("combined"));
 
-app.set("port", process.env.PORT || 5000);
-
-// 모든 userinfo 테이블의 모든 정보 가져오기
-app.get("/users", (req, res) => {
-  connection.query("SELECT * from userinfo", (error, rows, fields) => {
-    if (error) throw error;
-    console.log("User info is: ", rows);
-    res.json(rows);
-  });
-});
+app.set("port", process.env.PORT || 3001);
 
 // id, token, geo 쿼리 보내서 리턴 받는 튜토리얼
 app.get("/api/queryprac", function (req, res) {
@@ -38,12 +29,34 @@ app.get("/api/queryprac", function (req, res) {
   });
 });
 
+app.get("/api/mapping", (req, res) => {
+  const skkuid = req.query.skkuid;
+  connection.query(
+    `SELECT * from mapping where skkuid=${skkuid}`,
+    (err, rows, fields) => {
+      if (err) throw err;
+      res.json(rows);
+    }
+  );
+});
+
+app.post("api/mapping", (req, res) => {
+  const skkuid = req.body.skkuid;
+  const address = req.body.address;
+  let sql = `INSERT INTO transaction (skkuid, address) VALUES (?)`;
+  let values = [skkuid, address];
+  connection.query(sql, [values], (err, data, fields) => {
+    if (err) throw err;
+    return res.json({ status: "200" });
+  });
+});
+
 // 기능 구현
 
 app.get("/api/transaction", (req, res) => {
   if (req.query.who === "all") {
     connection.query(
-      `SELECT * from transaction where _to=${req.query.address} or _from=${req.query.address}`,
+      `SELECT * from userinfo where _to=${req.query.address} or _from=${req.query.address}`,
       (err, rows, fields) => {
         if (err) throw err;
         res.json(rows);
@@ -51,7 +64,7 @@ app.get("/api/transaction", (req, res) => {
     );
   } else if (req.query.who === "to") {
     connection.query(
-      `SELECT * from transaction where _to=${req.query.address}`,
+      `SELECT * from userinfo where _to=${req.query.address}`,
       (err, rows, fields) => {
         if (err) throw err;
         res.json(rows);
@@ -59,7 +72,7 @@ app.get("/api/transaction", (req, res) => {
     );
   } else if (req.query.who === "from") {
     connection.query(
-      `SELECT * from transaction where _from = ${req.query.address}`,
+      `SELECT * from userinfo where _from = ${req.query.address}`,
       (err, rows, fields) => {
         if (err) throw err;
         res.json(rows);
@@ -82,16 +95,17 @@ app.post("/api/createTx", (req, res) => {
   let toPoint;
   let fromPoint;
 
-  let sql = `INSERT INTO transaction (_from, _to, _point, _type, _date, _hash) VALUES (?)`;
+  let sql = `INSERT INTO transaction (_from, _to, _point, _type, _txtype, _date, _hash) VALUES (?)`;
 
   const _from = req.body._from;
   const _to = req.body._to;
   const point = req.body.point;
   const type = req.body.type;
+  const txtype = req.body.txtype;
   const date = new Date();
   const hash = req.body.hash;
 
-  let values = [_from, _to, point, type, date, hash];
+  let values = [_from, _to, point, type, txtype, date, hash];
 
   connection.query(
     `SELECT _username, _point${type} from user where _username = "${_from}" or _username="${_to}"`,
@@ -151,6 +165,7 @@ app.get("/api/checkPointsFrom", (req, res) => {
 
 // id에 대한 쿼리를 같이 보내면 해당 유저에 대한 정보를 가져올 수 있음.
 app.get("/api/userinfo", (req, res) => {
+  console.log(req);
   connection.query(
     `SELECT * from user where _username="${req.query.id}"`,
     (err, rows, fields) => {
@@ -160,55 +175,6 @@ app.get("/api/userinfo", (req, res) => {
   );
 });
 
-app.get("/api/graph", (req, res) => {
-  connection.query(
-    `SELECT * from graph where _account="${req.query.id}"`,
-    (err, rows, fields) => {
-      if (err) throw err;
-      res.json(rows);
-    }
-  );
-});
-app.post("/api/createGraph", (req, res) => {
-  const _point = req.body._point;
-  const id = req.query.id;
-  let sql = `UPDATE graph set Today = (?) where _account="${id}"`;
-  let sql1 = `UPDATE graph set Day_6 = Day_5 where _account="${id}"`;
-  let sql2 = `UPDATE graph set Day_5 = Day_4 where _account="${id}"`;
-  let sql3 = `UPDATE graph set Day_4 = Day_3 where _account="${id}"`;
-  let sql4 = `UPDATE graph set Day_3 = Day_2 where _account="${id}"`;
-  let sql5 = `UPDATE graph set Day_2 = Day_1 where _account="${id}"`;
-  let sql6 = `UPDATE graph set Day_1 = Today where _account="${id}"`;
-
-  connection.query(sql1, (err, rows) => {
-    if (err) throw err;
-  });
-
-  connection.query(sql2, (err, rows) => {
-    if (err) throw err;
-  });
-
-  connection.query(sql3, (err, rows) => {
-    if (err) throw err;
-  });
-
-  connection.query(sql4, (err, rows) => {
-    if (err) throw err;
-  });
-
-  connection.query(sql5, (err, rows) => {
-    if (err) throw err;
-  });
-
-  connection.query(sql6, (err, rows) => {
-    if (err) throw err;
-  });
-
-  connection.query(sql,[_point], (err,data,fields) => {
-    if (err) throw err;
-    return res.json({ status: "300" });
-  });
-});
 // 그냥 연습용 api
 app.post("/api/tester", (req, res) => {
   const type = req.body.type;
@@ -225,6 +191,15 @@ app.post("/api/tester", (req, res) => {
     }
   );
   console.log("helloworld!");
+});
+
+app.get("/api/:id", (req, res) => {
+  const type = req.params.id;
+  res.json({
+    user_id: type,
+    token: type,
+    geo: type,
+  });
 });
 
 app.listen(app.get("port"), () => {
