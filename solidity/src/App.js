@@ -3,11 +3,18 @@ import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import { cav, IPFSCONTRACT, ipfs } from "./variables";
-import DEPLOYED_ABI from "./contractinfo/deployedABI.json";
+import { useWeb3React } from "@web3-react/core";
 import DEPLOYED_ADDRESS from "./contractinfo/deployedAddress.json";
+import { injected } from "./wallet/Connector";
+
 function App() {
   const [database, setDatabase] = useState();
+
+  const { active, account, library, connector, activate, deactivate } =
+    useWeb3React();
+
   useEffect(() => {}, []);
+
   const metadata = {
     title: "Asset Metadata",
     type: "object",
@@ -61,8 +68,7 @@ function App() {
           //mapping(string=>string) ipfsAddress;를 등록합니다.(추후에 "today"는 변수로 바꿀 예정입니다.)
           gas: "500000",
           value: cav.utils.toPeb("0", "KLAY"),
-        },
-        sender.privateKey
+        }
       );
     cav.klay
       .sendTransaction({
@@ -94,11 +100,18 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <Button onClick={() => call()}>2번</Button>
-      <Button onClick={() => call1()}>1번</Button>
-      <Button onClick={() => call2()}>3번</Button>
-    </div>
+    <>
+      <div className="App">
+        <Button onClick={() => call()}>2번</Button>
+        <Button onClick={() => call1()}>1번</Button>
+        <Button onClick={() => call2()}>3번</Button>
+      </div>
+      <div className="App">
+        <Button onClick={async () => await activate(injected)}>로그인</Button>
+        <div>{account}</div>
+        <Button onClick={async () => deactivate()}>로그아웃</Button>
+      </div>
+    </>
   );
 }
 
