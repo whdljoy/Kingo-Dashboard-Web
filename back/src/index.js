@@ -16,14 +16,6 @@ app.use(morgan("combined"));
 
 app.set("port", process.env.PORT || 5000);
 
-// 모든 userinfo 테이블의 모든 정보 가져오기
-app.get("/users", (req, res) => {
-  connection.query("SELECT * from userinfo", (error, rows, fields) => {
-    if (error) throw error;
-    console.log("User info is: ", rows);
-    res.json(rows);
-  });
-});
 
 // id, token, geo 쿼리 보내서 리턴 받는 튜토리얼
 app.get("/api/queryprac", function (req, res) {
@@ -38,6 +30,27 @@ app.get("/api/queryprac", function (req, res) {
   });
 });
 
+app.get("/api/mapping", (req, res) => {
+  const skkuid = req.query.skkuid;
+  connection.query(
+    `SELECT * from mapping where skkuid=${skkuid}`,
+    (err, rows, fields) => {
+      if (err) throw err;
+      res.json(rows);
+    }
+  );
+});
+
+app.post("api/mapping", (req, res) => {
+  const skkuid = req.body.skkuid;
+  const address = req.body.address;
+  let sql = `INSERT INTO transaction (skkuid, address) VALUES (?)`;
+  let values = [skkuid, address];
+  connection.query(sql, [values], (err, data, fields) => {
+    if (err) throw err;
+    return res.json({ status: "200" });
+  });
+})
 // 기능 구현
 
 app.get("/api/transaction", (req, res) => {
@@ -171,7 +184,7 @@ app.get("/api/graph", (req, res) => {
 });
 app.post("/api/createGraph", (req, res) => {
   const _point = req.body._point;
-  const id = req.query.id;
+  const id = req.body.id;
   let sql = `UPDATE graph set Today = (?) where _account="${id}"`;
   let sql1 = `UPDATE graph set Day_6 = Day_5 where _account="${id}"`;
   let sql2 = `UPDATE graph set Day_5 = Day_4 where _account="${id}"`;
@@ -206,7 +219,7 @@ app.post("/api/createGraph", (req, res) => {
 
   connection.query(sql,[_point], (err,data,fields) => {
     if (err) throw err;
-    return res.json({ status: "300" });
+    return res.json({ status: "200" });
   });
 });
 // 그냥 연습용 api

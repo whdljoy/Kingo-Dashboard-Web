@@ -18,7 +18,7 @@ import TotalPoint from "./TotalPoint";
 export default function TransactionsChart() {
     const history = useHistory()
     const location = useLocation();
-    const [pointArr, setPointArr] = useState(0);
+    const [pointArr, setPointArr] = useState([]);
     const {account} = useWeb3React();
     const getData = async () => {
         let isSubscribed = true
@@ -30,10 +30,7 @@ export default function TransactionsChart() {
             .then(function(response){
                 console.log(response.data);
                 if(isSubscribed){
-                    setPointArr(response.data[0]._pointA+response.data[0]._pointB+response.data[0]._pointC+response.data[0]._pointD);
                     postData(response.data[0]._pointA+response.data[0]._pointB+response.data[0]._pointC+response.data[0]._pointD);
-                    history.push(`/my-transactions`);
-                   //location.reload();
                 }
             }); 
         } catch (err) {
@@ -43,24 +40,31 @@ export default function TransactionsChart() {
       };
     const postData = async (total_P) => {
         console.log(total_P);
-        let isSubscribed = true
-        const form = new FormData();
-        form.append('_point', total_P);
+        let data={
+            id : account,
+            _point : total_P
+        }
         try {
-            await axios.post("http://localhost:5000/api/createGraph",{ 
-                params:{
-                    id: account},
-                data:{
-                    form}
-                })
+            await axios.post("http://localhost:5000/api/createGraph",JSON.stringify(data),{ 
+                headers: {
+                    "Content-Type": `application/json`,
+                  }})
             .then(function(response){
                 console.log(response.data);
             }); 
         } catch (err) {
           console.error(err.message);
         }
-        return () => isSubscribed = false
       };
+    const sumDataPoint = () => {
+        for (let i = 0; i < pointArr.length; i++) {
+            data[i].point = pointArr[i]
+        }
+        //12
+       //history.push(`/my-transactions`);
+       //location.reload();
+       //window.location.reload("/my-transactions");
+    }
     const RegetData = async () => {
         let isSubscribed = true
         try {
@@ -71,7 +75,7 @@ export default function TransactionsChart() {
             .then(function(response){
                 console.log(response.data);
                 if(isSubscribed){
-            
+                    setPointArr(pointArr.concat(response.data[0].Day_6,response.data[0].Day_5,response.data[0].Day_4,response.data[0].Day_3,response.data[0].Day_2,response.data[0].Day_1,response.data[0].Today));
                 }
             }); 
         } catch (err) {
@@ -80,11 +84,13 @@ export default function TransactionsChart() {
         return () => isSubscribed = false
       };
     useEffect(()=>{    
-        getData()
+        //getData()
         RegetData()
+        sumDataPoint()
         const interval=setInterval(()=>{
           getData()
           RegetData()
+          sumDataPoint()
          },20000)
          return()=>clearInterval(interval)
     },[])
