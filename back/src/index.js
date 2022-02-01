@@ -182,11 +182,11 @@ app.get("/api/graph", (req, res) => {
     }
   );
 });
-app.post("/api/createGraph", (req, res) => {
+app.post("/api/createGraph", (req, res) => { //graph db에 반영하는 post 문
   const _point = req.body._point;
   const id = req.body.id;
   let sql = `UPDATE graph set Today = (?) where _account="${id}"`;
-  let sql1 = `UPDATE graph set Day_6 = Day_5 where _account="${id}"`;
+  let sql1 = `UPDATE graph set Day_6 = Day_5 where _account="${id}"`; //각 날짜의 값들을 하루 전으로 옮겨준다
   let sql2 = `UPDATE graph set Day_5 = Day_4 where _account="${id}"`;
   let sql3 = `UPDATE graph set Day_4 = Day_3 where _account="${id}"`;
   let sql4 = `UPDATE graph set Day_3 = Day_2 where _account="${id}"`;
@@ -217,7 +217,7 @@ app.post("/api/createGraph", (req, res) => {
     if (err) throw err;
   });
 
-  connection.query(sql,[_point], (err,data,fields) => {
+  connection.query(sql,[_point], (err,data,fields) => { 
     if (err) throw err;
     return res.json({ status: "200" });
   });
