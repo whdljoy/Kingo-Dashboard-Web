@@ -21,7 +21,7 @@ export default function TransactionsChart() {
     const [pointArr, setPointArr] = useState([]);
     const {account} = useWeb3React();
     const getData = async () => {
-        let isSubscribed = true
+        let isSubscribed = true //axios get을 통해 account 의 현재 포인트 정보를 불러옴
         try {
             await axios.get("http://localhost:5000/api/userinfo",{ 
             params:{
@@ -31,6 +31,7 @@ export default function TransactionsChart() {
                 console.log(response.data);
                 if(isSubscribed){
                     postData(response.data[0]._pointA+response.data[0]._pointB+response.data[0]._pointC+response.data[0]._pointD);
+                    //불러온 포인트를 post를 통해 DB구조를 변경해주고 반영함
                 }
             }); 
         } catch (err) {
@@ -60,10 +61,6 @@ export default function TransactionsChart() {
         for (let i = 0; i < pointArr.length; i++) {
             data[i].point = pointArr[i]
         }
-        //12
-       //history.push(`/my-transactions`);
-       //location.reload();
-       //window.location.reload("/my-transactions");
     }
     const RegetData = async () => {
         let isSubscribed = true
