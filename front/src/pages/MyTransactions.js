@@ -19,7 +19,7 @@ function MyTransactions() {
     return (
         <Flex m={10} flexDirection="column" w="full">
             <Text fontSize="3xl" fontWeight="700">
-                My 거래내역
+                My Point 현황
             </Text>
             <VStack
                 w="full"

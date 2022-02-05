@@ -73,9 +73,8 @@ function NavBar() {
                             <Text
                                 fontSize="sm"
                                 fontWeight="bold"
-                                color={index === 1 ? "#ffffff" : "#A3AED0"}
-                            >
-                                My 거래내역
+                                color={index === 1 ? "#ffffff" : "#A3AED0"}>
+                                Point 현황
                             </Text>
                         </HStack>
                     </Link>
@@ -96,7 +95,7 @@ function NavBar() {
                             fontWeight="bold"
                             color={index === 2 ? "#ffffff" : "#00000"}
                         >
-                            전체 거래내역
+                            Transaction 내역
                         </Text>
                     </HStack>
                 </Link>
