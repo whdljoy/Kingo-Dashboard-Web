@@ -1,4 +1,4 @@
-import { HStack, Text } from "@chakra-ui/layout";
+/*import { HStack, Text } from "@chakra-ui/layout";
 import styled from "styled-components";
 import kakaoTalk from "../assets/kakaoTalk.png";
 import {useEffect, useState} from "react";
@@ -121,3 +121,4 @@ export default function LatestTransactions() {
     </>
   );
 }
+*/

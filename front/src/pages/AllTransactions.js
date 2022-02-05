@@ -1,6 +1,5 @@
 import { Flex, HStack, Text, VStack, Box } from "@chakra-ui/layout";
-import LatestBlock from "../components/LatestBlocks";
-import LatestTransactions from "../components/Page_transaction";
+import LatestTransactions from "../components/LatestTransactions";
 import { useState } from "react";
 
 
