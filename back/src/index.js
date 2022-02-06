@@ -177,11 +177,12 @@ app.get("/api/graph", (req, res) => {
   connection.query(
     `SELECT * from graph where _account="${req.query.id}"`,
     (err, rows, fields) => {
-      if (err) throw err;
-      res.json(rows);
+    if (err) throw err;
+    res.json(rows);
     }
   );
 });
+
 app.post("/api/createGraph", (req, res) => { //graph db에 반영하는 post 문
   const _point = req.body._point;
   const id = req.body.id;
@@ -242,4 +243,10 @@ app.post("/api/tester", (req, res) => {
 
 app.listen(app.get("port"), () => {
   console.log("Express server listening on port " + app.get("port"));
+});
+const schedule = require('node-schedule');
+ 
+var j = schedule.scheduleJob("5 * * * * *", function() {
+  getGraph();
+  console.log("매분 5초마다 등장");
 });

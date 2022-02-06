@@ -80,18 +80,17 @@ export default function TransactionsChart() {
         }
         return () => isSubscribed = false
       };
-    useEffect(()=>{    
-        //getData()
-        RegetData()
-        sumDataPoint()
-        const interval=setInterval(()=>{
-          getData()
-          RegetData()
-          sumDataPoint()
-         },20000)
-         return()=>clearInterval(interval)
-    },[])
-
+    // useEffect(()=>{    
+    //     //getData()
+    //     RegetData()
+    //     sumDataPoint()
+    //     const interval=setInterval(()=>{
+    //       getData()
+    //       RegetData()
+    //       sumDataPoint()
+    //      },20000)
+    //      return()=>clearInterval(interval)
+    // },[])
     return (
         <ResponsiveContainer width="95%" height={210} debounce={1}>
             <LineChart
