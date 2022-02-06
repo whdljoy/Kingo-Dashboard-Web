@@ -247,6 +247,42 @@ app.listen(app.get("port"), () => {
 const schedule = require('node-schedule');
  
 var j = schedule.scheduleJob("5 * * * * *", function() {
-  getGraph();
+  let sql = `UPDATE graph set Today = (Select POINT FROM (Select user._pointA+user._pointB+user._pointC+user._pointD AS POINT FROM user Inner join graph ON user._username = graph._account)A)`;
+  let sql1 = `UPDATE graph set Day_6 = Day_5`; 
+  let sql2 = `UPDATE graph set Day_5 = Day_4`; 
+  let sql3 = `UPDATE graph set Day_4 = Day_3`; 
+  let sql4 = `UPDATE graph set Day_3 = Day_2`; 
+  let sql5 = `UPDATE graph set Day_2 = Day_1`;
+  let sql6 = `UPDATE graph set Day_1 = Today`;
+
+
+  connection.query(sql1, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql2, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql3, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql4, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql5, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql6, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql, (err, rows) => {
+    if (err) throw err;
+  });
   console.log("매분 5초마다 등장");
 });
+
