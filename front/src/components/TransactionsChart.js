@@ -16,85 +16,83 @@ import {
 import TotalPoint from "./TotalPoint";
 
 export default function TransactionsChart() {
-    const history = useHistory()
-    const location = useLocation();
-    const [pointArr, setPointArr] = useState([]);
-    const {account} = useWeb3React();
-    const getData = async () => {
-        let isSubscribed = true //axios get을 통해 account 의 현재 포인트 정보를 불러옴
-        try {
-            await axios.get("http://localhost:5000/api/userinfo",{ 
-            params:{
-                    id:account}
-                })
-            .then(function(response){
-                console.log(response.data);
-                if(isSubscribed){
-                    postData(response.data[0]._pointA+response.data[0]._pointB+response.data[0]._pointC+response.data[0]._pointD);
-                    //불러온 포인트를 post를 통해 DB구조를 변경해주고 반영함
-                }
-            }); 
-        } catch (err) {
-          console.error(err.message);
-        }
-        return () => isSubscribed = false
-      };
-    const postData = async (total_P) => {
-        console.log(total_P);
-        let data={
-            id : account,
-            _point : total_P
-        }
-        try {
-            await axios.post("http://localhost:5000/api/createGraph",JSON.stringify(data),{ 
-                headers: {
-                    "Content-Type": `application/json`,
-                  }})
-            .then(function(response){
-                console.log(response.data);
-            }); 
-        } catch (err) {
-          console.error(err.message);
-        }
-      };
-    const sumDataPoint = () => {
-        for (let i = 0; i < pointArr.length; i++) {
-            data[i].point = pointArr[i]
-        }
+    var chartdata;
+    var moment = require('moment');
+    var now = new Date().getDate();	// 현재 날짜 및 시간
+    function change_date(published_at){
+        const publish_date = moment(published_at).format('YYYY년 MM월 DD일')
+        return publish_date
     }
-    const RegetData = async () => {
-        let isSubscribed = true
-        try {
-            await axios.get("http://localhost:5000/api/graph",{ 
-            params:{
-                    id:account}
-                })
-            .then(function(response){
+    var Today =change_date(new Date());
+    var Date1 =change_date(new Date(new Date().setDate(now - 1)))
+    var Date2 =change_date(new Date(new Date().setDate(now - 2)))
+    var Date3 =change_date(new Date(new Date().setDate(now - 3)))
+    var Date4 =change_date(new Date(new Date().setDate(now- 4)))
+    var Date5 =change_date(new Date(new Date().setDate(now - 5)))
+    var Date6 =change_date(new Date(new Date().setDate(now - 6)))
+    const [Day6State, setDay6State] = useState(0);
+    const [Day5State, setDay5State] = useState(0);
+    const [Day4State, setDay4State] = useState(0);
+    const [Day3State, setDay3State] = useState(0);
+    const [Day2State, setDay2State] = useState(0);
+    const [Day1State, setDay1State] = useState(0);
+    const [TodayState, setTodayState] = useState(0);
+    const {account} = useWeb3React();
+    useEffect(() => {
+        const Day6List = [];
+        const Day5List = [];
+        const Day4List = [];
+        const Day3List = [];
+        const Day2List = [];
+        const Day1List = [];
+        axios.get("http://localhost:5000/api/graph",{ 
+        params:{
+                id:account}
+        }).then(function(response){
                 console.log(response.data);
-                if(isSubscribed){
-                    setPointArr(pointArr.concat(response.data[0].Day_6,response.data[0].Day_5,response.data[0].Day_4,response.data[0].Day_3,response.data[0].Day_2,response.data[0].Day_1,response.data[0].Today));
-                }
-            }); 
-        } catch (err) {
-          console.error(err.message);
-        }
-        return () => isSubscribed = false
-      };
-    // useEffect(()=>{    
-    //     //getData()
-    //     RegetData()
-    //     sumDataPoint()
-    //     const interval=setInterval(()=>{
-    //       getData()
-    //       RegetData()
-    //       sumDataPoint()
-    //      },20000)
-    //      return()=>clearInterval(interval)
-    // },[])
+                setDay6State(response.data[0].Day_6);
+                setDay5State(response.data[0].Day_5);
+                setDay4State(response.data[0].Day_4);
+                setDay3State(response.data[0].Day_3);
+                setDay2State(response.data[0].Day_2);
+                setDay1State(response.data[0].Day_1);
+                setTodayState(response.data[0].Today);
+            });
+        }, [])
+        chartdata=[
+            {
+                "date": Date6,
+                "point": Day6State
+            },
+            {
+                "date": Date5,
+                "point": Day5State
+            },
+            {
+                "date": Date4,
+                "point": Day4State
+            },
+            {
+                "date": Date3,
+                "point": Day3State
+            },
+            {
+                "date": Date2,
+                "point": Day2State
+            },
+            {
+                "date": Date1,
+                "point": Day1State
+            },
+            {
+                "date": Today,
+                "point": TodayState
+            }
+        ]    
     return (
         <ResponsiveContainer width="95%" height={210} debounce={1}>
             <LineChart
-                data={data}
+                data={chartdata}
                 margin={{ top: 5, right: 30, left: 15, bottom: 2 }}
             >
                 <XAxis
