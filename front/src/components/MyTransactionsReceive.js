@@ -2,8 +2,9 @@ import styled from "styled-components";
 import kakaoTalk from "../assets/kakaoTalk.png";
 import { HStack, Text } from "@chakra-ui/layout";
 import { useState, useEffect } from "react";
+import { Button, Link } from "@chakra-ui/react";
 import { useWeb3React } from "@web3-react/core";
-import axios from 'axios';
+import axios from "axios";
 
 const Table = styled.table`
   width: 100%;
@@ -32,7 +33,6 @@ const Time = styled.td`
   text-align: center;
 `;
 
-
 export default function MyTransactionsReceive() {
   const [fromListState, setFromListState] = useState(["Not Found"]);
   const [toListState, setToListState] = useState(["Not Found"]);
@@ -40,37 +40,47 @@ export default function MyTransactionsReceive() {
   const [valueListState, setValueListState] = useState(["Not Found"]);
   const [dateListState, setDateListState] = useState(["Not Found"]);
   const [hashListState, setHashListState] = useState(["Not Found"]);
+  const [ipfs, setIpfs] = useState([]);
 
-  const {account} = useWeb3React();
+  const { account } = useWeb3React();
 
-  useEffect(() =>{
+  useEffect(async () => {
     const fromList = [];
     const toList = [];
     const typeList = [];
     const valueList = [];
     const dateList = [];
     const hashList = [];
-    axios.get("http://localhost:5000/api/viewAll").then(function(response){
-      console.log(response.data[1]._from);
-      for (let i = 1; i <= response.data.length; i++) {
-        if (response.data[i]?._to == account) {
-          fromList.push(response.data[i]._from);
-          typeList.push(response.data[i]._type);
-          valueList.push(response.data[i]._point);
-          dateList.push(response.data[i]._date);
-          hashList.push(response.data[i]._hash);
+    const urlList = [];
+    await axios
+      .get(`http://localhost:5000/api/transaction?who=to&address=${account}`)
+      .then(function (response) {
+        console.log(response.data[1]._from);
+        for (let i = 1; i <= response.data.length; i++) {
+          if (response.data[i]?._to == account) {
+            fromList.push(response.data[i]._from);
+            typeList.push(response.data[i]._type);
+            valueList.push(response.data[i]._point);
+            dateList.push(response.data[i]._date);
+            hashList.push(response.data[i]._hash);
+          }
         }
-      }
-      setFromListState(fromList);
-      setTypeListState(typeList);
-      setValueListState(valueList);
-      setDateListState(dateList);
-      setHashListState(hashList)
-    }) 
-  },[])
+        setFromListState(fromList);
+        setTypeListState(typeList);
+        setValueListState(valueList);
+        setDateListState(dateList);
+        setHashListState(hashList);
+      });
+    for (let i = 0; i < hashList.length; i++) {
+      await axios
+        .get(`http://localhost:5000/api/result/${hashList[i]}`)
+        .then((res) => urlList.push(res.data));
+    }
+    setIpfs(urlList);
+  }, []);
   const createTransactionTable = () => {
     const displayedTable = [];
-    for(let i = 0; i < valueListState.length; i++) {
+    for (let i = 0; i < valueListState.length; i++) {
       displayedTable.push(
         <tr>
           <Td>
@@ -82,32 +92,30 @@ export default function MyTransactionsReceive() {
           <Time>{dateListState[i]}</Time>
           <Td>{fromListState[i]}</Td>
           <Td>{valueListState[i]}</Td>
-          <Td>{hashListState[i]}</Td>
+          <Td>
+            <Button size="xs" as={Link} isExternal href={ipfs[i]}>
+              {hashListState[i]}
+            </Button>
+          </Td>
         </tr>
-      )
+      );
     }
-    return(
+    return (
       <Table>
-      <thead>
-        <tr>
-          <Th>플랫폼</Th>
-          <Th>시간</Th>
-          <Th>FROM</Th>
-          <Th>금액</Th>
-          <Th>HASH</Th>
-        </tr>
-      </thead>
+        <thead>
+          <tr>
+            <Th>플랫폼</Th>
+            <Th>시간</Th>
+            <Th>FROM</Th>
+            <Th>금액</Th>
+            <Th>HASH</Th>
+          </tr>
+        </thead>
 
-      <tbody>
-        {displayedTable}
-      </tbody>
-    </Table>
-    )
-  }
+        <tbody>{displayedTable}</tbody>
+      </Table>
+    );
+  };
 
-  return (
-    <>
-      {createTransactionTable()}
-    </>
-  );
+  return <>{createTransactionTable()}</>;
 }

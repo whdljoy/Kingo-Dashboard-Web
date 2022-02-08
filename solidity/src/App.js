@@ -18,18 +18,10 @@ function App() {
   const metadata = {
     title: "Asset Metadata",
     type: "object",
-    properties: {
-      name: {
-        type: "string",
-        description: "videoId",
-      },
+    lists: {
       description: {
         type: "object",
         description: database,
-      },
-      image: {
-        type: "string",
-        description: "imgUrl",
       },
     },
   };
@@ -62,9 +54,9 @@ function App() {
         //트랜잭션에 서명합니다.
         {
           type: "FEE_DELEGATED_SMART_CONTRACT_EXECUTION", //해당 트랜잭션의 타입은 대납 트랜잭션이고, 함수를 호출하는 사람이 가스비를 지불하는 것이 아니라 다른 사람이 대신 낼 수 있다는 것을 의미합니다.
-          from: sender.address, // sender는 함수를 호출하는 사람입니다.
+          from: feePayer.address, // sender는 함수를 호출하는 사람입니다.
           to: DEPLOYED_ADDRESS["key"], // contract에게 요청합니다.
-          data: IPFSCONTRACT.methods.setIpfsAddress("today", url).encodeABI(), //내용은 setIpfsAddress를 통해
+          data: IPFSCONTRACT.methods.setIpfsAddress("todaydl", url).encodeABI(), //내용은 setIpfsAddress를 통해
           //mapping(string=>string) ipfsAddress;를 등록합니다.(추후에 "today"는 변수로 바꿀 예정입니다.)
           gas: "500000",
           value: cav.utils.toPeb("0", "KLAY"),
@@ -85,16 +77,22 @@ function App() {
   const call1 = async () => {
     // 이미 구현된 api에 모든 트랜잭션 정보를 불러옵니다.(추후에 날짜별로 가져오도록 수정합니다.)
     axios
-      .get("http://localhost:3001/api/viewAll")
+      .get("http://localhost:5000")
       .then((res) => res.data)
       .then((res) => {
         console.log(res);
         setDatabase(res);
       });
+
+    console.log(database);
+  };
+
+  const call3 = async () => {
+    axios.get("http://localhost:5000/api/result").then(console.log);
   };
 
   const call2 = async () => {
-    const vari = await IPFSCONTRACT.methods.getIpfsAddress("today").call(); // IPFScONTRACT에서 getIpfsAddress를 호출하는데
+    const vari = await IPFSCONTRACT.methods.getIpfsAddress("2").call(); // IPFScONTRACT에서 getIpfsAddress를 호출하는데
     // getIpfsAddress는 view 함수이므로 가스가 들지 않기때문에 위와같이 불러올 수 있습니다.(setIpfsAddress와 다릅니다.)
     console.log(vari);
   };
