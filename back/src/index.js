@@ -185,7 +185,24 @@ app.get("/api/transaction", (req, res) => {
   }
 });
 
-app.post("/api/sendTransaction", (req, res) => {});
+app.get("/api/getHash", (req, res) => {
+  const address = req.query.address;
+  let hash = [];
+
+  connection.query(
+    `SELECT * from transaction where _to="${address}" or _from="${address}"`,
+    (err, rows, fields) => {
+      if (err) throw err;
+      for (let i = 0; i < rows.length; i++) {
+        hash.push(rows[i]._hash);
+      }
+      const noDuplHash = hash.filter((el, idx) => {
+        return hash.indexOf(el) === idx;
+      });
+      res.json(noDuplHash);
+    }
+  );
+});
 
 // transaction을 만들어 내는
 app.post("/api/createTx", (req, res) => {

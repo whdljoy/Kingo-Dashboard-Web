@@ -78,7 +78,6 @@ export default function MyTransactionsAll() {
             response.data[i]?._from == account ||
             response.data[i]?._to == account
           ) {
-            fromList.push(response.data[i]?._from);
             toList.push(response.data[i]._to);
             typeList.push(response.data[i]._type);
             valueList.push(response.data[i]._point);
@@ -121,13 +120,12 @@ export default function MyTransactionsAll() {
             </HStack>
           </Td>
           <Time>{dateListState[i]}</Time>
-          <Td>{fromListState[i]}</Td>
           <Td>{toListState[i]}</Td>
           {/* <Td>{ipfs[i]}</Td> */}
           <Td>{valueListState[i]}</Td>
 
           <Td>
-            <Button size="xs" as={Link} isExternal href={ipfs[i]}>
+            <Button size="xs" as={Link} isExternal>
               {hashListState[i]}
             </Button>
           </Td>
@@ -140,7 +138,6 @@ export default function MyTransactionsAll() {
           <tr>
             <Th>플랫폼</Th>
             <Th>시간</Th>
-            <Th>FROM</Th>
             <Th>TO</Th>
             <Th>금액</Th>
             <Th>HASH</Th>

@@ -93,7 +93,7 @@ export default function MyTransactionsReceive() {
           <Td>{fromListState[i]}</Td>
           <Td>{valueListState[i]}</Td>
           <Td>
-            <Button size="xs" as={Link} isExternal href={ipfs[i]}>
+            <Button size="xs" as={Link} isExternal>
               {hashListState[i]}
             </Button>
           </Td>
