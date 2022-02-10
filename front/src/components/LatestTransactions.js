@@ -49,7 +49,7 @@ export default function LatestTransactions() {
         _hash = res.data;
         setHash(_hash[0]);
         setReceipt(_hash[1]);
-        arr = Array.from({ length: res.data.length }, (v, i) => i);
+        arr = Array.from({ length: res.data[0].length }, (v, i) => i);
         setIndex(arr);
       });
     for (let i = 0; i < _hash[0].length; i++) {
@@ -81,6 +81,7 @@ export default function LatestTransactions() {
     );
 
     for (let i = 0; i < index.length; i++) {
+      console.log(index.length);
       result.push(
         <tr>
           <Td>
