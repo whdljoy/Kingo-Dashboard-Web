@@ -63,9 +63,11 @@ const feePayer = caver.klay.accounts.wallet.add(
   "0x8cafa33df8c1740720bc4815ce7c7cd61d18aaf396bb2a3da5e197f0c7b85aff"
 );
 app.get("/", async (req, res) => {
+  const index = req.query.hash;
+  console.log(index);
   let database;
   connection.query(
-    `SELECT * from transaction where _hash=null`,
+    `SELECT * from transaction where _hash=${index}`,
     async (err, rows, fields) => {
       if (err) throw err;
       database = rows;
@@ -92,7 +94,12 @@ app.get("/", async (req, res) => {
         })
         .then(function (receipt) {
           console.log(receipt.transactionHash);
-          res.json(receipt.TransactionHash);
+          connection.query(
+            `UPDATE TRANSACTION set _hashreceipt="${receipt.transactionHash}" where _hash=${index}`,
+            async (err, rows) => {
+              res.json(rows);
+            }
+          );
         });
     }
   );
@@ -188,6 +195,8 @@ app.get("/api/transaction", (req, res) => {
 app.get("/api/getHash", (req, res) => {
   const address = req.query.address;
   let hash = [];
+  let receipt = [];
+  let add = [];
 
   connection.query(
     `SELECT * from transaction where _to="${address}" or _from="${address}"`,
@@ -195,11 +204,17 @@ app.get("/api/getHash", (req, res) => {
       if (err) throw err;
       for (let i = 0; i < rows.length; i++) {
         hash.push(rows[i]._hash);
+        receipt.push(rows[i]._hashreceipt);
       }
       const noDuplHash = hash.filter((el, idx) => {
         return hash.indexOf(el) === idx;
       });
-      res.json(noDuplHash);
+      const noDuplReceipt = receipt.filter((el, idx) => {
+        return receipt.indexOf(el) === idx;
+      });
+      add.push(noDuplHash);
+      add.push(noDuplReceipt);
+      res.json(add);
     }
   );
 });

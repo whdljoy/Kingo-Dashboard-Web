@@ -36,6 +36,7 @@ export default function LatestTransactions() {
   const [hash, setHash] = useState([]);
   const [hashUrl, setHashUrl] = useState([]);
   const [index, setIndex] = useState([]);
+  const [receipt, setReceipt] = useState([]);
   const { account } = useWeb3React();
 
   useEffect(async () => {
@@ -46,17 +47,23 @@ export default function LatestTransactions() {
       .get(`http://localhost:5000/api/getHash?address=${account}`)
       .then((res) => {
         _hash = res.data;
-        setHash(_hash);
+        setHash(_hash[0]);
+        setReceipt(_hash[1]);
         arr = Array.from({ length: res.data.length }, (v, i) => i);
         setIndex(arr);
       });
-    for (let i = 0; i < _hash.length; i++) {
+    for (let i = 0; i < _hash[0].length; i++) {
       await axios
-        .get(`http://localhost:5000/api/result/${_hash[i]}`)
+        .get(`http://localhost:5000/api/result/${_hash[0][i]}`)
         .then((res) => urlList.push(res.data));
     }
+    console.log(urlList);
     setHashUrl(urlList);
   }, []);
+
+  const getUrl = (receipt) => {
+    return `https://baobab.scope.klaytn.com/tx/${receipt}?tabId=internalTx`;
+  };
 
   const view = () => {
     const result = [];
@@ -67,6 +74,7 @@ export default function LatestTransactions() {
         <tr>
           <Th>id</Th>
           <Th>HASH</Th>
+          <Th>RECEIPT</Th>
           <Th> IPFS HASH URL </Th>
         </tr>
       </thead>
@@ -81,7 +89,11 @@ export default function LatestTransactions() {
             </HStack>
           </Td>
           <Td>{hash[i]}</Td>
-
+          <Td>
+            <Button size="xs" as={Link} isExternal href={getUrl(receipt[i])}>
+              {receipt[i]}
+            </Button>
+          </Td>
           <Td>
             <Button size="xs" as={Link} isExternal href={hashUrl[i]}>
               {hashUrl[i]}
