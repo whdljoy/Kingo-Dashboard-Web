@@ -56,7 +56,7 @@ export default function MyTransactionsReceive() {
       .get(`http://localhost:5000/api/transaction?who=to&address=${account}`)
       .then(function (response) {
         console.log(response.data[1]._from);
-        for (let i = 1; i <= response.data.length; i++) {
+        for (let i = 0; i < response.data.length; i++) {
           if (response.data[i]?._to == account) {
             fromList.push(response.data[i]._from);
             typeList.push(response.data[i]._type);

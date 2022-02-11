@@ -41,8 +41,6 @@ const IPFSCONTRACT = new caver.klay.Contract(
 
 app.set("port", process.env.PORT || 5000);
 
-let count = 3; //0으로 시작할 것, 현재 transactions 테이블에서 hash가
-// 2까지 되어 있어서 그냥 3으로 잡은것.
 
 // cav.klay.accounts.wallet.add(
 //   "0x8cafa33df8c1740720bc4815ce7c7cd61d18aaf396bb2a3da5e197f0c7b85aff"
@@ -81,7 +79,7 @@ app.get("/", async (req, res) => {
           from: feePayer.address,
           to: DEPLOYED_ADDRESS["key"],
           data: IPFSCONTRACT.methods
-            .setIpfsAddress(toString(count), url)
+            .setIpfsAddress(index, url)
             .encodeABI(),
           gas: "500000",
           value: caver.utils.toPeb("0", "KLAY"),
@@ -97,6 +95,7 @@ app.get("/", async (req, res) => {
           connection.query(
             `UPDATE TRANSACTION set _hashreceipt="${receipt.transactionHash}" where _hash=${index}`,
             async (err, rows) => {
+              if (err) throw err;
               res.json(rows);
             }
           );
@@ -112,7 +111,7 @@ app.get("/", async (req, res) => {
 
 app.get("/api/result/:index", async (req, res) => {
   const index = req.params.index;
-  console.log(index === "1");
+  console.log(index === "3");
 
   const vari = await IPFSCONTRACT.methods.getIpfsAddress(index).call();
 
@@ -302,56 +301,16 @@ app.get("/api/userinfo", (req, res) => {
   );
 });
 
-// app.get("/api/graph", (req, res) => {
-//   connection.query(
-//     `SELECT * from graph where _account="${req.query.id}"`,
-//     (err, rows, fields) => {
-//       if (err) throw err;
-//       res.json(rows);
-//     }
-//   );
-// });
-// app.post("/api/createGraph", (req, res) => {
-//   //graph db에 반영하는 post 문
-//   const _point = req.body._point;
-//   const id = req.body.id;
-//   let sql = `UPDATE graph set Today = (?) where _account="${id}"`;
-//   let sql1 = `UPDATE graph set Day_6 = Day_5 where _account="${id}"`; //각 날짜의 값들을 하루 전으로 옮겨준다
-//   let sql2 = `UPDATE graph set Day_5 = Day_4 where _account="${id}"`;
-//   let sql3 = `UPDATE graph set Day_4 = Day_3 where _account="${id}"`;
-//   let sql4 = `UPDATE graph set Day_3 = Day_2 where _account="${id}"`;
-//   let sql5 = `UPDATE graph set Day_2 = Day_1 where _account="${id}"`;
-//   let sql6 = `UPDATE graph set Day_1 = Today where _account="${id}"`;
+ app.get("/api/graph", (req, res) => {
+   connection.query(
+     `SELECT * from graph where _account="${req.query.id}"`,
+     (err, rows, fields) => {
+       if (err) throw err;
+       res.json(rows);
+     }
+   );
+ });
 
-//   connection.query(sql1, (err, rows) => {
-//     if (err) throw err;
-//   });
-
-//   connection.query(sql2, (err, rows) => {
-//     if (err) throw err;
-//   });
-
-//   connection.query(sql3, (err, rows) => {
-//     if (err) throw err;
-//   });
-
-//   connection.query(sql4, (err, rows) => {
-//     if (err) throw err;
-//   });
-
-//   connection.query(sql5, (err, rows) => {
-//     if (err) throw err;
-//   });
-
-//   connection.query(sql6, (err, rows) => {
-//     if (err) throw err;
-//   });
-
-//   connection.query(sql, [_point], (err, data, fields) => {
-//     if (err) throw err;
-//     return res.json({ status: "200" });
-//   });
-// });
 // 그냥 연습용 api
 app.post("/api/tester", (req, res) => {
   const type = req.body.type;
@@ -370,10 +329,47 @@ app.post("/api/tester", (req, res) => {
   console.log("helloworld!");
 });
 
-const j = schedule.scheduleJob("0 2 ? * 0", function () {
-  console.log("일요일 2시 0분에 실행");
-});
-
 app.listen(app.get("port"), () => {
   console.log("Express server listening on port " + app.get("port"));
+});
+
+ 
+var j = schedule.scheduleJob("5 * * * * *", function() {
+  let sql = `UPDATE graph set Today = (Select POINT FROM (Select user._pointA+user._pointB+user._pointC+user._pointD AS POINT FROM user Inner join graph ON user._username = graph._account)A)`;
+  let sql1 = `UPDATE graph set Day_6 = Day_5`; 
+  let sql2 = `UPDATE graph set Day_5 = Day_4`; 
+  let sql3 = `UPDATE graph set Day_4 = Day_3`; 
+  let sql4 = `UPDATE graph set Day_3 = Day_2`; 
+  let sql5 = `UPDATE graph set Day_2 = Day_1`;
+  let sql6 = `UPDATE graph set Day_1 = Today`;
+
+
+  connection.query(sql1, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql2, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql3, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql4, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql5, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql6, (err, rows) => {
+    if (err) throw err;
+  });
+
+  connection.query(sql, (err, rows) => {
+    if (err) throw err;
+  });
+  console.log("매분 5초마다 등장");
 });
