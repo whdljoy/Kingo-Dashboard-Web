@@ -1,7 +1,7 @@
 import { Flex, HStack, Text, VStack, Box } from "@chakra-ui/layout";
 import LatestTransactions from "../components/LatestTransactions";
 import { useState } from "react";
-
+import Clock  from "../components/Clock";
 function AllTransactions() {
   const [modalOn, setModalOn] = useState(false);
 
@@ -83,9 +83,11 @@ function AllTransactions() {
         </HStack>
         <HStack justifyContent="center" w="full">
           <Text color="#4318FF" fontWeight={700} fontSize="9xl">
-            11:20:00
+          <Clock/>
           </Text>
+          
         </HStack>
+            
       </VStack>
     </Flex>
   );

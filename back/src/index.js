@@ -334,7 +334,7 @@ app.listen(app.get("port"), () => {
 });
 
  
-var j = schedule.scheduleJob("5 * * * * *", function() {
+var j = schedule.scheduleJob("0 0 0 * * *", function() {
   let sql = `UPDATE graph set Today = (Select POINT FROM (Select user._pointA+user._pointB+user._pointC+user._pointD AS POINT FROM user Inner join graph ON user._username = graph._account)A)`;
   let sql1 = `UPDATE graph set Day_6 = Day_5`; 
   let sql2 = `UPDATE graph set Day_5 = Day_4`; 
@@ -371,5 +371,5 @@ var j = schedule.scheduleJob("5 * * * * *", function() {
   connection.query(sql, (err, rows) => {
     if (err) throw err;
   });
-  console.log("매분 5초마다 등장");
+  console.log("매일 0시 0분");
 });

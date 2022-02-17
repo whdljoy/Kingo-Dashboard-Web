@@ -95,7 +95,7 @@ function NavBar() {
                             fontWeight="bold"
                             color={index === 2 ? "#ffffff" : "#00000"}
                         >
-                            Transaction 내역
+                            Transaction
                         </Text>
                     </HStack>
                 </Link>
