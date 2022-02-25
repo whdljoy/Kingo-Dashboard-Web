@@ -1,3 +1,6 @@
+//Point 현황에 드가는 메뉴
+// 내 지갑 Address와 관련된 모든 내역을 보여준다.
+
 import styled from "styled-components";
 import kakaoTalk from "../assets/kakaoTalk.png";
 import { HStack, Text } from "@chakra-ui/layout";

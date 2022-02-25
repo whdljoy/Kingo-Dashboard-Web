@@ -1,3 +1,4 @@
+// 모든 페이지에 들어가는 부분으로 왼쪽에 있는 메뉴바 구성
 import { useState } from "react";
 import { VStack, HStack, Img, Text, Link } from "@chakra-ui/react";
 import activeDashboard from "../assets/activeDashboard.svg";

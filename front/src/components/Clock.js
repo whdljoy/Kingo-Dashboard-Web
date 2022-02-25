@@ -7,7 +7,7 @@ import { useWeb3React } from "@web3-react/core";
 import moment from 'moment';
 import Moment from 'react-moment';
 import 'moment/locale/ko';
-import { useInterval } from 'react-use';
+
 
 const Table = styled.table`
   width: 100%;
