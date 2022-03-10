@@ -1,12 +1,12 @@
 //Point 현황에 드가는 메뉴
 // 내 지갑 Address와 관련된 내역 중 내가 Point를 획득한 부분만을 보여준다.
-import styled from "styled-components";
-import kakaoTalk from "../assets/kakaoTalk.png";
-import { HStack, Text } from "@chakra-ui/layout";
-import { useState, useEffect } from "react";
-import { Button, Link } from "@chakra-ui/react";
-import { useWeb3React } from "@web3-react/core";
-import axios from "axios";
+import styled from 'styled-components';
+import kakaoTalk from '../assets/kakaoTalk.png';
+import { HStack, Text } from '@chakra-ui/layout';
+import { useState, useEffect } from 'react';
+import { Button, Link } from '@chakra-ui/react';
+import { useWeb3React } from '@web3-react/core';
+import axios from 'axios';
 
 const Table = styled.table`
   width: 100%;
@@ -36,12 +36,12 @@ const Time = styled.td`
 `;
 
 export default function MyTransactionsReceive() {
-  const [fromListState, setFromListState] = useState(["Not Found"]);
-  const [toListState, setToListState] = useState(["Not Found"]);
-  const [typeListState, setTypeListState] = useState(["Not Found"]);
-  const [valueListState, setValueListState] = useState(["Not Found"]);
-  const [dateListState, setDateListState] = useState(["Not Found"]);
-  const [hashListState, setHashListState] = useState(["Not Found"]);
+  const [fromListState, setFromListState] = useState(['Not Found']);
+  const [toListState, setToListState] = useState(['Not Found']);
+  const [typeListState, setTypeListState] = useState(['Not Found']);
+  const [valueListState, setValueListState] = useState(['Not Found']);
+  const [dateListState, setDateListState] = useState(['Not Found']);
+  const [hashListState, setHashListState] = useState(['Not Found']);
   const [ipfs, setIpfs] = useState([]);
 
   const { account } = useWeb3React();
@@ -54,29 +54,24 @@ export default function MyTransactionsReceive() {
     const dateList = [];
     const hashList = [];
     const urlList = [];
-    await axios
-      .get(`http://localhost:5000/api/transaction?who=to&address=${account}`)
-      .then(function (response) {
-        console.log(response.data[1]._from);
-        for (let i = 0; i < response.data.length; i++) {
-          if (response.data[i]?._to == account) {
-            fromList.push(response.data[i]._from);
-            typeList.push(response.data[i]._type);
-            valueList.push(response.data[i]._point);
-            dateList.push(response.data[i]._date);
-            hashList.push(response.data[i]._hash);
-          }
+    await axios.get(`http://localhost:5000/api/transaction?who=to&address=${account}`).then(function (response) {
+      for (let i = 0; i < response.data.length; i++) {
+        if (response.data[i]?._to == account) {
+          fromList.push(response.data[i]._from);
+          typeList.push(response.data[i]._type);
+          valueList.push(response.data[i]._point);
+          dateList.push(response.data[i]._date);
+          hashList.push(response.data[i]._hash);
         }
-        setFromListState(fromList);
-        setTypeListState(typeList);
-        setValueListState(valueList);
-        setDateListState(dateList);
-        setHashListState(hashList);
-      });
+      }
+      setFromListState(fromList);
+      setTypeListState(typeList);
+      setValueListState(valueList);
+      setDateListState(dateList);
+      setHashListState(hashList);
+    });
     for (let i = 0; i < hashList.length; i++) {
-      await axios
-        .get(`http://localhost:5000/api/result/${hashList[i]}`)
-        .then((res) => urlList.push(res.data));
+      await axios.get(`http://localhost:5000/api/result/${hashList[i]}`).then((res) => urlList.push(res.data));
     }
     setIpfs(urlList);
   }, []);
@@ -84,7 +79,7 @@ export default function MyTransactionsReceive() {
     const displayedTable = [];
     for (let i = 0; i < valueListState.length; i++) {
       displayedTable.push(
-        <tr>
+        <tr key={i}>
           <Td>
             <HStack justifyContent="center">
               <Icon src={kakaoTalk} />

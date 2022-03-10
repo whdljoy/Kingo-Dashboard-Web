@@ -4,6 +4,7 @@ import PointStatus from '../components/PointStatus';
 import PointPieChart from '../components/PointPieChart';
 import AccountInfo from '../components/AccountInfo';
 import Sign from './Sign';
+import AdminPage from './AdminPage';
 
 function DashBoard() {
   const [isLessThan1070] = useMediaQuery('(max-width:1070px)');
@@ -14,7 +15,8 @@ function DashBoard() {
         <PointStatus />
         <AccountInfo />
         <PointPieChart />
-        <Sign />
+        <PointStatus />
+        {/* <AdminPage /> */}
       </Flex>
     </Flex>
   );

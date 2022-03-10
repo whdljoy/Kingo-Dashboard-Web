@@ -20,7 +20,9 @@
     "ipfs-http-client": "32.0.1",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
     "node-schedule": "^2.1.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "web3": "^1.7.1"
   }
 }
