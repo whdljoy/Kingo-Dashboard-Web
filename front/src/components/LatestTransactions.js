@@ -49,10 +49,10 @@ export default function LatestTransactions() {
         _hash = res.data;
         setHash(_hash[0]);
         setReceipt(_hash[1]);
-        arr = Array.from({ length: res.data[0].length }, (v, i) => i);
+        arr = Array.from({ length: res.data[0]?.length }, (v, i) => i);
         setIndex(arr);
       });
-    for (let i = 0; i < _hash[0].length; i++) {
+    for (let i = 0; i < _hash[0]?.length; i++) {
       await axios
         .get(`http://localhost:5000/api/result/${_hash[0][i]}`)
         .then((res) => urlList.push(res.data));
