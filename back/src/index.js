@@ -64,14 +64,15 @@ app.get("/api/uploadIpfs", async (req, res) => {
       if (err) throw err;
       database = rows;
       const transactions = MetadataSchema(database);
-      const ipfsres = await ipfs.add(Buffer.from(JSON.stringify(transactions)));
-      const url = "https://ipfs.infura.io/ipfs/" + ipfsres[0].hash;
+      const ipfsres = await ipfs.add(Buffer.from(JSON.stringify(transactions))); //ipfs에 transactions를 올립니다.
+      const url = "https://ipfs.infura.io/ipfs/" + ipfsres[0].hash; // ipfs url을 형식에 맞게 초기화해줍니다.
 
       const { rawTransaction: senderRawTransaction } =
         await caver.klay.accounts.signTransaction({
+          // 트랜잭션에 sign을 합니다.
           type: "FEE_DELEGATED_SMART_CONTRACT_EXECUTION",
           from: feePayer.address,
-          to: DEPLOYED_ADDRESS["key"],
+          to: DEPLOYED_ADDRESS,
           data: IPFSCONTRACT.methods.setIpfsAddress(index, url).encodeABI(),
           gas: "500000",
           value: caver.utils.toPeb("0", "KLAY"),
@@ -79,13 +80,14 @@ app.get("/api/uploadIpfs", async (req, res) => {
 
       caver.klay
         .sendTransaction({
+          // feepayer와 보낼 트랜잭션을 정하고 klaytn에 올립니다.
           senderRawTransaction: senderRawTransaction,
           feePayer: feePayer.address,
         })
         .then(function (receipt) {
-          console.log(receipt.transactionHash);
+          console.log(receipt.transactionHash); // 트랜잭션 해시가 발급됩니다.
           connection.query(
-            `UPDATE TRANSACTION set _hashreceipt="${receipt.transactionHash}" where _hash=${index}`,
+            `UPDATE TRANSACTION set _hashreceipt="${receipt.transactionHash}" where _hash=${index}`, // _hashreceipt컬럼을 _hash가 index인 row에 채웁니다.
             async (err, rows) => {
               if (err) throw err;
               res.json({ status: 200 });
@@ -121,9 +123,11 @@ app.get("/api/getHash", (req, res) => {
   let add = [];
 
   connection.query(
-    `SELECT * from transaction where _to="${address}" or _from="${address}"`,
+    `SELECT * from transaction where _to="${address}" or _from="${address}"`, // address와 관련된 모든 transaction을 찾습니다.
     (err, rows, fields) => {
       if (err) throw err;
+      // 조회한 트랜잭션에서의 모든 _hash값, _hashreceipt 값을 찾고 배열 형태로 반환해줍니다.(_hash, _hashreceipt는 1대1 매칭이 됩니다.)
+      // 같은 _hash에 대해서 같은 _hashreceipt 값 그 반대도 마찬가지
       for (let i = 0; i < rows.length; i++) {
         hash.push(rows[i]._hash);
         receipt.push(rows[i]._hashreceipt);
@@ -142,6 +146,7 @@ app.get("/api/getHash", (req, res) => {
 });
 
 app.get("/api/mapping", (req, res) => {
+  // skkuid와 연결된 메타마스크 주소를 모두 찾습니다.
   const skkuid = req.query.skkuid;
   connection.query(
     `SELECT * from mapping where skkuid=${skkuid}`,
@@ -153,6 +158,7 @@ app.get("/api/mapping", (req, res) => {
 });
 
 app.post("api/mapping", (req, res) => {
+  // skkuid와 연결된 메타마스크 주소를 설정합니다.
   const skkuid = req.body.skkuid;
   const address = req.body.address;
   let sql = `INSERT INTO transaction (skkuid, address) VALUES (?)`;
@@ -164,6 +170,9 @@ app.post("api/mapping", (req, res) => {
 });
 
 app.get("/api/result/:index", async (req, res) => {
+  // 특정 _hash값을 가질 때 어떤 ipfs url을 가지는지 블록체인에 저장된 정보로부터 조회합니다.
+  // 이것도 마찬가지로 같은 _hash 값을 가질경우 같은 ipfs url을 가진다고 생각하면 됩니다.
+
   const index = req.params.index;
 
   const vari = await IPFSCONTRACT.methods.getIpfsAddress(index).call();
@@ -174,6 +183,10 @@ app.get("/api/result/:index", async (req, res) => {
 // 기능 구현
 
 app.get("/api/transaction", (req, res) => {
+  // 특정 메타마스크 주소와 관련된 트랜잭션을 조회합니다.
+  // 'all'일 경우 주소가 _from, _to 둘다 인 경우를 조회하고,
+  // 'to'일 경우 주소가 _to인 경우를,
+  // 'from'일 경우 주소가 _from일 경우를 조회합니다.
   if (req.query.who === "all") {
     connection.query(
       `SELECT * from transaction where _to="${req.query.address}" or _from="${req.query.address}"`,
@@ -212,9 +225,15 @@ app.get("/api/transaction", (req, res) => {
 
 // transaction을 만들어 내는
 app.post("/api/createTx", async (req, res) => {
+  // 써드 파티에서 거래가 발생하면 db에 정보를 저장합니다.
+  // 처음에는 _skkuid, _from, _to, _point, _signedTransaction을 받고
+  // 매주 ipfs에 트랜잭션에 올라갈 때 _hash, _hashreceipt가 null값에서 의미있는 값으로 변경됩니다.
+  // _type, _txtype은 하드코딩 해두었는데 나중에 사이트가 만들어 졌을 때, 요청을 보내는 ip 주소에 따라 _type이 결정되고, 관리자가 주는 유형의 거래, 혹은 사용자가 포인트를 소비하는 유형의 거래 등에 따라 _txtype이 결정됩니다.
+
   let fromPoint;
   let toPoint;
 
+  const _skkuid = req.body._skkuid;
   const _from = req.body._from;
   const _to = req.body._to;
   const _point = req.body._point;
@@ -227,19 +246,21 @@ app.post("/api/createTx", async (req, res) => {
   const _signedTransaction = req.body._signedTransaction;
   // _from, _to, _point에 대한 정보를 sign함. 이후에 어떤 transaction에 대하여 누가 서명했는지 알기 위해서는 transaction으로 부터 _from, _to, _point 정보를 가져와서 web3js method로 알 수 있음.
 
-  // const address = web3.eth.personal.ecRecover(
-  //   JSON.stringify({ _from: _from, _to: _to, _point: _point }),
-  //   _signedTransaction
-  // );
+  console.log({ _from: _from, _to: _to, _point: _point });
 
-  // address.then((res) => {
-  //   if (res !== _from) {
-  //     return res.json({ status: "잘못된 서명" });
-  //   }
-  // });
+  //서명한 사람이 누구인지를 address가 나타냄.(나중에 필요할 경우 사용하면 될 것 같음)
+  const address = web3.eth.accounts.recover(
+    JSON.stringify({ _from: _from, _to: _to, _point: _point }),
+    _signedTransaction
+  );
 
-  let sql = `INSERT INTO transaction (_from, _to, _point, _type, _txtype, _date, _hash, _hashreceipt, _signedTransaction) VALUES (?)`;
+  // if (address != _from) {
+  //   res.json({ status: "잘못된 트랜잭션입니다." });
+  // }
+
+  let sql = `INSERT INTO transaction (_skkuid, _from, _to, _point, _type, _txtype, _date, _hash, _hashreceipt, _signedTransaction) VALUES (?)`;
   let values = [
+    _skkuid,
     _from,
     _to,
     _point,
@@ -255,6 +276,8 @@ app.post("/api/createTx", async (req, res) => {
     `SELECT _username, _point${_type} from user where _username = "${_from}" or _username="${_to}"`,
     (err, rows) => {
       if (err) throw err;
+      console.log(rows);
+      //db에 _from, _to가 저장되어 있지않으면 에러가 납니다.
       const variable1 = rows[0][Object.keys(rows[0])[1]];
       const variable2 = rows[1][Object.keys(rows[1])[1]];
 
@@ -284,6 +307,8 @@ app.post("/api/createTx", async (req, res) => {
 
 // 발생한 모든 transaction을 가져옴.
 app.get("/api/viewAll", (req, res) => {
+  // 발생한 모든 transaction을 가져옵니다.
+
   connection.query(`SELECT * from transaction`, (err, rows, fields) => {
     if (err) throw err;
     res.json(rows);
@@ -292,6 +317,8 @@ app.get("/api/viewAll", (req, res) => {
 
 // 특정 타입에 대한 from의 포인트를 가져옴.
 app.get("/api/checkPointsFrom", (req, res) => {
+  // 특정 플랫폼에서의 메타마스크 주소가 가진 포인트를 봅니다.
+
   const type = req.query.type;
   const _from = req.query._from;
   connection.query(
@@ -304,6 +331,7 @@ app.get("/api/checkPointsFrom", (req, res) => {
 });
 
 app.get("/api/graph", (req, res) => {
+  // 특정 메타마스크 주소의 graph를 봅니다.
   connection.query(
     `SELECT * from graph where _account="${req.query.id}"`,
     (err, rows, fields) => {
