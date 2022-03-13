@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const mysql = require('mysql');
+const Web3 = require('web3');
 const dbconfig = require('./config/database.js');
 const connection = mysql.createConnection(dbconfig);
 
@@ -15,6 +16,8 @@ app.use(cors());
 app.use(morgan('combined'));
 
 app.set('port', process.env.PORT || 5000);
+
+const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
 // id, token, geo 쿼리 보내서 리턴 받는 튜토리얼
 // app.get('/api/queryprac', function (req, res) {
@@ -95,7 +98,13 @@ app.post('/api/createTx', async (req, res) => {
   const _signedTransaction = req.body._signedTransaction;
   // _from, _to, _point에 대한 정보를 sign함. 이후에 어떤 transaction에 대하여 누가 서명했는지 알기 위해서는 transaction으로 부터 _from, _to, _point 정보를 가져와서 web3js method로 알 수 있음.
 
-  console.log(_signedTransaction);
+  const address = web3.eth.personal.ecRecover(JSON.stringify({ _from, _to, _point }), _signedTransaction);
+
+  address.then((res) => {
+    if (res !== _from) {
+      return res.json({ status: '잘못된 서명' });
+    }
+  });
 
   let sql = `INSERT INTO transaction (_from, _to, _point, _type, _txtype, _date, _hash, _hashreceipt, _signedTransaction) VALUES (?)`;
   let values = [_from, _to, _point, _type, _txtype, _date, _hash, _hashreceipt, _signedTransaction];
