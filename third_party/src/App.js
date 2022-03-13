@@ -50,16 +50,6 @@ function App() {
 
     console.log(_signedTransaction);
 
-<<<<<<< HEAD
-    // axios
-    //   .post('http://localhost:5000/api/createTx', {
-    //     _from: accounts[0],
-    //     _to: '0x3bb2401344B03Ac9E13B80DFBF4676eCC662Fb9F',
-    //     _point: '2',
-    //     _signedTransaction: _signedTransaction,
-    //   })
-    //   .then(console.log);
-=======
     const address = web3.eth.personal.ecRecover(
       JSON.stringify({
         _from: accounts[0],
@@ -79,7 +69,6 @@ function App() {
         _signedTransaction: _signedTransaction,
       })
       .then(console.log);
->>>>>>> b04ad44fb322f57a08fff18f0755a6a089f7f19f
   };
 
   return (
