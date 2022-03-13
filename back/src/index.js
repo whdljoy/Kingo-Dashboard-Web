@@ -90,7 +90,7 @@ app.get("/api/uploadIpfs", async (req, res) => {
             `UPDATE TRANSACTION set _hashreceipt="${receipt.transactionHash}" where _hash=${index}`,
             async (err, rows) => {
               if (err) throw err;
-              res.json(rows);
+              res.json({ status: 200 });
             }
           );
         });
