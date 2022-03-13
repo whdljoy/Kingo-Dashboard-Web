@@ -17,17 +17,17 @@ app.use(morgan('combined'));
 app.set('port', process.env.PORT || 5000);
 
 // id, token, geo 쿼리 보내서 리턴 받는 튜토리얼
-app.get('/api/queryprac', function (req, res) {
-  const user_id = req.query.id;
-  const token = req.query.token;
-  const geo = req.query.geo;
+// app.get('/api/queryprac', function (req, res) {
+//   const user_id = req.query.id;
+//   const token = req.query.token;
+//   const geo = req.query.geo;
 
-  res.json({
-    user_id: user_id,
-    token: token,
-    geo: geo,
-  });
-});
+//   res.json({
+//     user_id: user_id,
+//     token: token,
+//     geo: geo,
+//   });
+// });
 
 app.get('/api/mapping', (req, res) => {
   const skkuid = req.query.skkuid;
@@ -52,17 +52,17 @@ app.post('api/mapping', (req, res) => {
 
 app.get('/api/transaction', (req, res) => {
   if (req.query.who === 'all') {
-    connection.query(`SELECT * from userinfo where _to=${req.query.address} or _from=${req.query.address}`, (err, rows, fields) => {
+    connection.query(`SELECT * from transaction where _to=${req.query.address} or _from=${req.query.address}`, (err, rows, fields) => {
       if (err) throw err;
       res.json(rows);
     });
   } else if (req.query.who === 'to') {
-    connection.query(`SELECT * from userinfo where _to=${req.query.address}`, (err, rows, fields) => {
+    connection.query(`SELECT * from transaction where _to=${req.query.address}`, (err, rows, fields) => {
       if (err) throw err;
       res.json(rows);
     });
   } else if (req.query.who === 'from') {
-    connection.query(`SELECT * from userinfo where _from = ${req.query.address}`, (err, rows, fields) => {
+    connection.query(`SELECT * from transaction where _from = ${req.query.address}`, (err, rows, fields) => {
       if (err) throw err;
       res.json(rows);
     });

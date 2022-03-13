@@ -23,6 +23,7 @@
     "mysql2": "^2.3.3",
     "node-schedule": "^2.1.0",
     "nodemon": "^2.0.15",
+    "truffle-hdwallet-provider-klaytn": "^1.4.2",
     "web3": "^1.7.1"
   }
 }
