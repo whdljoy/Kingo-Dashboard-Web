@@ -1,9 +1,19 @@
 //DashBoard page에 사용됨
-//내 지갑 주소와 클릭시 해당 주소의 클레이튼 스코프로 연결시켜주는 부분 
-import {VStack,Box,Flex,Text,Button,Link,useMediaQuery, Tooltip,} from "@chakra-ui/react";
+//내 지갑 주소와 클릭시 해당 주소의 클레이튼 스코프로 연결시켜주는 부분
+import {
+  VStack,
+  Box,
+  Flex,
+  Text,
+  Button,
+  Link,
+  useMediaQuery,
+  Tooltip,
+} from "@chakra-ui/react";
 import { useWeb3React } from "@web3-react/core";
 
 function AccountInfo() {
+  // klaytn 사이트에서 내 계정 정보를 볼 수 있도록 하는 컴포넌트
   const [isLessThan1195] = useMediaQuery("(max-width:1195px)");
   const { account } = useWeb3React();
   const parseAccount =

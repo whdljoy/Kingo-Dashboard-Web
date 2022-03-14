@@ -5,6 +5,7 @@ import { useWeb3React } from "@web3-react/core";
 import axios from "axios";
 
 function PointPieChart() {
+  // 플랫폼(type) 별로 보유한 포인트와 그것들의 비율을 한 눈에 볼 수 있도록 원 그래프 형식으로 표현한 컴포넌트
   const [pointArr, setPointArr] = useState([]);
   const { account } = useWeb3React();
 

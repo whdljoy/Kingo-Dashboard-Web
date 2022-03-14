@@ -13,6 +13,7 @@ import {
 import TotalPoint from "./TotalPoint";
 
 export default function TransactionsChart() {
+  //날짜별 포인트 변화를 꺾은 선 그래프로 보여주는 컴포넌트
   var chartdata;
   var moment = require("moment");
   var now = new Date().getDate(); // 현재 날짜 및 시간

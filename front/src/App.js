@@ -1,18 +1,16 @@
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
-import styled from 'styled-components';
-import NavBar from './components/Navbar.js';
-import { Container, Flex } from '@chakra-ui/react';
-import DashBoard from './pages/DashBoard';
-import MyTransactions from './pages/MyTransactions';
-import AllTransactions from './pages/AllTransactions';
-import AdminPage from './pages/AdminPage';
-import Login from './pages/Login';
-import Sign from './pages/Sign';
-import { useWeb3React } from '@web3-react/core';
+import { BrowserRouter, Route, Redirect } from "react-router-dom";
+import styled from "styled-components";
+import NavBar from "./components/Navbar.js";
+import { Container, Flex } from "@chakra-ui/react";
+import DashBoard from "./pages/DashBoard";
+import MyTransactions from "./pages/MyTransactions";
+import IpfsUrl from "./pages/IpfsUrl";
+import Login from "./pages/Login";
+import { useWeb3React } from "@web3-react/core";
 
 const AppWrap = styled.div`
   font-size: 12px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 `;
 
 function App() {
@@ -27,8 +25,7 @@ function App() {
             <Route exact path="/" component={Login} />
             <Route exact path="/dashboard" component={DashBoard} />
             <Route exact path="/my-transactions" component={MyTransactions} />
-            <Route exact path="/all-transactions" component={AllTransactions} />
-            <Route exact path="/admin-page" component={AdminPage} />
+            <Route exact path="/check-transactions" component={IpfsUrl} />
           </BrowserRouter>
         </Flex>
       </Container>
