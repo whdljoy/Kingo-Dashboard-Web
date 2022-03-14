@@ -161,44 +161,6 @@ app.get("/api/result/:index", async (req, res) => {
 
 // 기능 구현
 
-
-app.get("/api/transaction", (req, res) => {
-  if (req.query.who === "all") {
-    connection.query(
-      `SELECT * from transaction where _to="${req.query.address}" or _from="${req.query.address}"`,
-      (err, rows, fields) => {
-        if (err) throw err;
-        res.json(rows);
-      }
-    );
-  } else if (req.query.who === "to") {
-    connection.query(
-      `SELECT * from transaction where _to="${req.query.address}"`,
-      (err, rows, fields) => {
-        if (err) throw err;
-        res.json(rows);
-      }
-    );
-  } else if (req.query.who === "from") {
-    connection.query(
-      `SELECT * from transaction where _from = "${req.query.address}"`,
-      (err, rows, fields) => {
-        if (err) throw err;
-        res.json(rows);
-      }
-    );
-  } else {
-    res.json({
-      from: "",
-      to: "",
-      value: "",
-      type: "",
-      create_date: "",
-      hash: "",
-    });
-  }
-});
-
 app.get("/api/transaction", (req, res) => {
   // 특정 메타마스크 주소와 관련된 트랜잭션을 조회합니다.
   // 'all'일 경우 주소가 _from, _to 둘다 인 경우를 조회하고,
@@ -240,7 +202,6 @@ app.get("/api/transaction", (req, res) => {
   }
 });
 
-// transaction을 만들어 내는
 function checkApiKey(req, res, next){
   try {
     const key = req.headers.authorization;
@@ -345,7 +306,6 @@ app.post("/api/createTx", checkApiKey, async (req, res) => {
 // 특정 타입에 대한 from의 포인트를 가져옴.
 app.get("/api/checkPointsFrom", (req, res) => {
   // 특정 플랫폼에서의 메타마스크 주소가 가진 포인트를 봅니다.
-
   const type = req.query.type;
   const _from = req.query._from;
   connection.query(
