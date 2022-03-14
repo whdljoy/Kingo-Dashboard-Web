@@ -3,9 +3,8 @@ import styled from "styled-components";
 import NavBar from "./components/Navbar.js";
 import { Container, Flex } from "@chakra-ui/react";
 import DashBoard from "./pages/DashBoard";
-import MyTransactions from "./pages/MyTransactions";
-import AllTransactions from "./pages/AllTransactions";
-import AdminPage from "./pages/AdminPage";
+import MyPoint from "./pages/MyPoint";
+import Transaction from "./pages/Transaction";
 import Login from "./pages/Login";
 import { useWeb3React } from "@web3-react/core";
 
@@ -25,9 +24,8 @@ function App() {
             {active ? <NavBar /> : <></>}
             <Route exact path="/" component={Login} />
             <Route exact path="/dashboard" component={DashBoard} />
-            <Route exact path="/my-transactions" component={MyTransactions} />
-            <Route exact path="/all-transactions" component={AllTransactions} />
-            <Route exact path="/admin-page" component={AdminPage} />
+            <Route exact path="/my-point" component={MyPoint} />
+            <Route exact path="/check-transactions" component={Transaction} />
           </BrowserRouter>
         </Flex>
       </Container>

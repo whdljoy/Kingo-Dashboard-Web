@@ -36,6 +36,7 @@ const Time = styled.td`
 `;
 
 export default function MyTransactionsReceive() {
+  // 내가 포인트를 받는 트랜잭션을 볼 수 있도록 한 컴포넌트
   const [fromListState, setFromListState] = useState(["Not Found"]);
   const [toListState, setToListState] = useState(["Not Found"]);
   const [typeListState, setTypeListState] = useState(["Not Found"]);
@@ -57,7 +58,6 @@ export default function MyTransactionsReceive() {
     await axios
       .get(`http://localhost:5000/api/transaction?who=to&address=${account}`)
       .then(function (response) {
-        console.log(response.data[1]._from);
         for (let i = 0; i < response.data.length; i++) {
           if (response.data[i]?._to == account) {
             fromList.push(response.data[i]._from);
@@ -84,7 +84,7 @@ export default function MyTransactionsReceive() {
     const displayedTable = [];
     for (let i = 0; i < valueListState.length; i++) {
       displayedTable.push(
-        <tr>
+        <tr key={i}>
           <Td>
             <HStack justifyContent="center">
               <Icon src={kakaoTalk} />

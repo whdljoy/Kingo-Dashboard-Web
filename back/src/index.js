@@ -117,18 +117,6 @@ app.get("/api/uploadIpfs", async (req, res) => {
   // const url = "https://ipfs.infura.io/ipfs/" + ipfsres[0].hash;
 });
 
-// id, token, geo 쿼리 보내서 리턴 받는 튜토리얼
-app.get("/api/queryprac", function (req, res) {
-  const user_id = req.query.id;
-  const token = req.query.token;
-  const geo = req.query.geo;
-
-  res.json({
-    user_id: user_id,
-    token: token,
-    geo: geo,
-  });
-});
 
 app.get("/api/getHash", (req, res) => {
   const address = req.query.address;
@@ -159,27 +147,6 @@ app.get("/api/getHash", (req, res) => {
   );
 });
 
-app.get("/api/mapping", (req, res) => {
-  const skkuid = req.query.skkuid;
-  connection.query(
-    `SELECT * from mapping where skkuid=${skkuid}`,
-    (err, rows, fields) => {
-      if (err) throw err;
-      res.json(rows);
-    }
-  );
-});
-
-app.post("/api/mapping", (req, res) => {
-  const skkuid = req.body.skkuid;
-  const address = req.body.address;
-  let sql = `INSERT INTO transaction (skkuid, address) VALUES (?)`;
-  let values = [skkuid, address];
-  connection.query(sql, [values], (err, data, fields) => {
-    if (err) throw err;
-    return res.json({ status: "200" });
-  });
-});
 
 app.get("/api/result/:index", async (req, res) => {
   // 특정 _hash값을 가질 때 어떤 ipfs url을 가지는지 블록체인에 저장된 정보로부터 조회합니다.
@@ -274,8 +241,28 @@ app.get("/api/transaction", (req, res) => {
 });
 
 // transaction을 만들어 내는
+function checkApiKey(req, res, next){
+  try {
+    const key = req.headers.authorization;
+    //const api_key = api_crypto.hashing(key); 
+    if (key && key === api_config.JWT_SECRET) {
+      req.decoded =req.headers.authorization;
+      return next();
+    }
+    else{
+      res.sendStatus(401);
+    } 
+  }
+  // 인증 실패
+  catch (error) {
+    return res.status(401).json({
+      code: 401,
+      message: '유효하지 않은 토큰입니다.'
+    });
+  }
+}
 
-app.post("/api/createTx", async (req, res) => {
+app.post("/api/createTx", checkApiKey, async (req, res) => {
   // 써드 파티에서 거래가 발생하면 db에 정보를 저장합니다.
   // 처음에는 _skkuid, _from, _to, _point, _signedTransaction을 받고
   // 매주 ipfs에 트랜잭션에 올라갈 때 _hash, _hashreceipt가 null값에서 의미있는 값으로 변경됩니다.
@@ -331,11 +318,9 @@ app.post("/api/createTx", async (req, res) => {
       //db에 _from, _to가 저장되어 있지않으면 에러가 납니다.
       const variable1 = rows[0][Object.keys(rows[0])[1]];
       const variable2 = rows[1][Object.keys(rows[1])[1]];
-
       rows[0][Object.keys(rows[0])[0]] == _from
         ? ((fromPoint = variable1), (toPoint = variable2))
         : ((fromPoint = variable2), (toPoint = variable1));
-
       if (fromPoint < _point) {
         return res.json({ status: "point가 부족합니다." });
       }
@@ -356,15 +341,6 @@ app.post("/api/createTx", async (req, res) => {
   );
 });
 
-// 발생한 모든 transaction을 가져옴.
-app.get("/api/viewAll", (req, res) => {
-  // 발생한 모든 transaction을 가져옵니다.
-
-  connection.query(`SELECT * from transaction`, (err, rows, fields) => {
-    if (err) throw err;
-    res.json(rows);
-  });
-});
 
 // 특정 타입에 대한 from의 포인트를 가져옴.
 app.get("/api/checkPointsFrom", (req, res) => {
@@ -406,55 +382,6 @@ app.get("/api/userinfo", (req, res) => {
   );
 });
 
-app.get("/api/:id", (req, res) => {
-  const type = req.params.id;
-  res.json({
-    user_id: type,
-    token: type,
-    geo: type,
-  });
-});
-
-// 그냥 연습용 api
-app.post("/api/tester", (req, res) => {
-  const type = req.body.type;
-  const point = 1 * req.body.point;
-  const _from = req.body._from;
-
-  connection.query(
-    `UPDATE USER set _point${type}=_point${type}-${point} where _username="${_from}"`,
-    (err, rows) => {
-      if (err) throw err;
-      res.json(rows);
-    }
-  );
-});
-
-
-function checkApiKey(req, res, next){
-  try {
-    const key = req.headers.authorization;
-    const api_key = api_crypto.hashing(key); // api_key = akfafjalfjasdkfjaslkdjflja(암호문)
-    if (api_key && api_key === api_config.JWT_SECRET) { // jwt.secret = akfafjalfjasdkfjaslkdjflja(암호문)
-      req.decoded =req.headers.authorization;
-      return next();
-    }
-    else{
-      res.sendStatus(401);
-    } 
-  }
-  // 인증 실패
-  catch (error) {
-    return res.status(401).json({
-      code: 401,
-      message: '유효하지 않은 토큰입니다.'
-    });
-  }
-}
-
-app.get("/thirds/data", checkApiKey,(req, res)=>{
-  res.json(req.decoded);
-})
 
 var j = schedule.scheduleJob("0 0 0 * * *", function() {
   let sql = `UPDATE graph set Today = (Select POINT FROM (Select user._pointA+user._pointB+user._pointC+user._pointD AS POINT FROM user Inner join graph ON user._username = graph._account)A)`;

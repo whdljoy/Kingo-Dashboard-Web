@@ -32,7 +32,9 @@ const Time = styled.td`
   text-align: center;
 `;
 
-export default function LatestTransactions() {
+export default function CheckTransactions() {
+  // 나의 트랜잭션들이 속한 _hash, _hashreceipt, ipfsurl를 확인할 수 있도록 한 컴포넌트
+  // ipfs상에 올라간 tranasaction들을 볼 수 있음.
   const [hash, setHash] = useState([]);
   const [hashUrl, setHashUrl] = useState([]);
   const [index, setIndex] = useState([]);

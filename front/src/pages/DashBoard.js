@@ -1,29 +1,38 @@
-import { HStack,Text,VStack,Flex,Box,useMediaQuery,} from "@chakra-ui/react";
-import TotalPoint from "../components/TotalPoint";
-import PointStatus from "../components/PointStatus";
-import PointPieChart from "../components/PointPieChart";
-import AccountInfo from "../components/AccountInfo";
-
-function DashBoard() {
+import {
+    HStack,
+    Text,
+    VStack,
+    Flex,
+    Box,
+    useMediaQuery,
+  } from "@chakra-ui/react";
+  import TotalPoint from "../components/TotalPoint";
+  import PointStatus from "../components/PointStatus";
+  import PointPieChart from "../components/PointPieChart";
+  import AccountInfo from "../components/AccountInfo";
+  
+  function DashBoard() {
+    // 대시보드 페이지
     const [isLessThan1070] = useMediaQuery("(max-width:1070px)");
     return (
-        <Flex wrap="wrap" w="full" h="full" justify="space-evenly" bg="#E5E5E5">
-            <Flex
-                flexGrow="1"
-                justify="space-between"
-                p={5}
-                wrap="wrap"
-                minW="350px"
-                w={isLessThan1070 ? "full" : "60%"}
-            >
-                <TotalPoint />
-                <PointStatus />
-                <AccountInfo />
-                <PointPieChart />
-                <PointStatus />
-            </Flex>
+      <Flex wrap="wrap" w="full" h="full" justify="space-evenly" bg="#E5E5E5">
+        <Flex
+          flexGrow="1"
+          justify="space-between"
+          p={5}
+          wrap="wrap"
+          minW="350px"
+          w={isLessThan1070 ? "full" : "60%"}
+        >
+          <TotalPoint />
+          <PointStatus />
+          <AccountInfo />
+          <PointPieChart />
+          <PointStatus />
+          {/* <AdminPage /> */}
         </Flex>
+      </Flex>
     );
-}
-
-export default DashBoard;
+  }
+  
+  export default DashBoard;

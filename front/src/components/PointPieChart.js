@@ -1,10 +1,10 @@
 import { VStack, HStack, Text, useMediaQuery } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { ResponsiveContainer, PieChart, Pie } from "recharts";
 import { useWeb3React } from "@web3-react/core";
 import axios from "axios";
 
-function PointPieChart() {
+function PointStatus() {
+  // 플랫폼 별 포인트 보유량을 볼 수 있도록 한 컴포넌트
   const [pointArr, setPointArr] = useState([]);
   const { account } = useWeb3React();
 
@@ -13,7 +13,6 @@ function PointPieChart() {
     axios
       .get("http://localhost:5000/api/userInfo", { params: { id: account } })
       .then(function (response) {
-        console.log(response);
         if (isSubscribed) {
           setPointArr(
             pointArr.concat(
@@ -28,25 +27,6 @@ function PointPieChart() {
     return () => (isSubscribed = false);
   }, []);
 
-  const data = [
-    {
-      name: "Group A",
-      value: pointArr[0],
-    },
-    {
-      name: "Group B",
-      value: pointArr[1],
-    },
-    {
-      name: "Group C",
-      value: pointArr[2],
-    },
-    {
-      name: "Group D",
-      value: pointArr[3],
-    },
-  ];
-
   const [isLessThan1195] = useMediaQuery("(max-width:1195px)");
   return (
     <VStack
@@ -59,24 +39,28 @@ function PointPieChart() {
       m={3}
     >
       <Text fontSize="3xl" fontWeight="700">
-        포인트 비율
+        포인트 현황
       </Text>
-      <ResponsiveContainer width="95%" height={180} debounce={1}>
-        <PieChart width={730} height={250}>
-          <Pie
-            data={data}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={80}
-            fill="#82ca9d"
-          />
-        </PieChart>
-      </ResponsiveContainer>
+      <VStack spacing={10} w="full">
+        <HStack w="full" justify="space-between">
+          <Text fontSize="lg">Service A</Text>
+          <Text fontSize="lg">{pointArr[0]}</Text>
+        </HStack>
+        <HStack w="full" justify="space-between">
+          <Text fontSize="lg">Service B</Text>
+          <Text fontSize="lg">{pointArr[1]}</Text>
+        </HStack>
+        <HStack w="full" justify="space-between">
+          <Text fontSize="lg">Service C</Text>
+          <Text fontSize="lg">{pointArr[2]}</Text>
+        </HStack>
+        <HStack w="full" justify="space-between">
+          <Text fontSize="lg">Service D</Text>
+          <Text fontSize="lg">{pointArr[3]}</Text>
+        </HStack>
+      </VStack>
     </VStack>
   );
 }
 
-export default PointPieChart;
+export default PointStatus;

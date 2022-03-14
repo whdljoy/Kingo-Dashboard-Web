@@ -1,8 +1,9 @@
 import { Flex, HStack, Text, VStack, Box } from "@chakra-ui/layout";
-import LatestTransactions from "../components/LatestTransactions";
+import LatestTransactions from "../components/CheckTransactions";
 import { useState } from "react";
-import Clock  from "../components/Clock";
-function AllTransactions() {
+import Clock from "../components/Clock";
+function Transaction() {
+  // 내 트랜잭션들이 ipfs 에 올라갔는지 확인할 수 있는 페이지
   const [modalOn, setModalOn] = useState(false);
 
   const onOpenModal = () => {
@@ -38,7 +39,6 @@ function AllTransactions() {
                         + More
                     </Box>
                 </HStack>
-
                 <LatestBlock />
             </VStack> */}
 
@@ -83,14 +83,12 @@ function AllTransactions() {
         </HStack>
         <HStack justifyContent="center" w="full">
           <Text color="#4318FF" fontWeight={700} fontSize="9xl">
-          <Clock/>
+            <Clock />
           </Text>
-          
         </HStack>
-            
       </VStack>
     </Flex>
   );
 }
 
-export default AllTransactions;
+export default Transaction;

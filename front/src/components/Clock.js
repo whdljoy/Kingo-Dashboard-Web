@@ -2,12 +2,11 @@ import { HStack, Text } from "@chakra-ui/layout";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Link,Box } from "@chakra-ui/react";
+import { Button, Link, Box } from "@chakra-ui/react";
 import { useWeb3React } from "@web3-react/core";
-import moment from 'moment';
-import Moment from 'react-moment';
-import 'moment/locale/ko';
-
+import moment from "moment";
+import Moment from "react-moment";
+import "moment/locale/ko";
 
 const Table = styled.table`
   width: 100%;
@@ -37,12 +36,12 @@ const Time = styled.td`
 `;
 
 export default function Clock() {
-
+  // 트랜잭션의 ipfs 업로드까지 남은 시간 표시 : 후에 백엔드로부터 정보를 가져올 예정
 
   const LiveTimeContainer = () => {
     const [minutes, setMinutes] = useState(59);
     const [seconds, setSeconds] = useState(0);
-  
+
     useEffect(() => {
       const countdown = setInterval(() => {
         if (parseInt(seconds) > 0) {
@@ -59,13 +58,13 @@ export default function Clock() {
       }, 1000);
       return () => clearInterval(countdown);
     }, [minutes, seconds]);
-  
+
     return (
-        <>
-          {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+      <>
+        {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
       </>
-    )
-  }
+    );
+  };
 
   return <>{LiveTimeContainer()}</>;
 }

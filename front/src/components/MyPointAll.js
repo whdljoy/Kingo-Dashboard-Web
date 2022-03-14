@@ -8,9 +8,6 @@ import { Button, Link } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 import axios from "axios";
-import Caver from "caver-js";
-import DEPLOYED_ADDRESS from "../contractinfo/deployedAddress.json";
-import DEPLOYED_ABI from "../contractinfo/deployedABI.json";
 // import ipfsClient from "ipfs-http-client";
 import { TabsDescendantsProvider } from "@chakra-ui/react";
 
@@ -42,6 +39,8 @@ const Time = styled.td`
 `;
 
 export default function MyTransactionsAll() {
+  // 나와 관련된 모든 트랜잭션을 볼 수 있는 컴포넌트
+
   const [fromListState, setFromListState] = useState(["Not Found"]);
   const [toListState, setToListState] = useState(["Not Found"]);
   const [typeListState, setTypeListState] = useState(["Not Found"]);
@@ -55,11 +54,6 @@ export default function MyTransactionsAll() {
   const config = {
     rpcURL: "https://api/baobab.klaytn.net:8651",
   };
-  const caver = new Caver(config.rpcURL);
-  const IPFSCONTRACT = new caver.klay.Contract(
-    DEPLOYED_ABI,
-    DEPLOYED_ADDRESS["key"]
-  );
 
   const naver = "https://www.naver.com/";
 
@@ -106,17 +100,11 @@ export default function MyTransactionsAll() {
     setIpfs(urlList);
   }, []);
 
-  useEffect(async () => {
-    // console.log(ipfs.length);
-    // console.log(ipfs[0]);
-    // console.log(ipfs);
-  }, [ipfs]);
-
   const createTransactionTable = () => {
     const displayedTable = [];
     for (let i = 0; i < valueListState.length; i++) {
       displayedTable.push(
-        <tr>
+        <tr key={i}>
           <Td>
             <HStack justifyContent="center">
               <Icon src={kakaoTalk} />
