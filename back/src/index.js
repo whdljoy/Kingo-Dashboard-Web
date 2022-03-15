@@ -1,4 +1,3 @@
-const api_crypto =require("./config/crypto.js");
 const api_config =require("./config/config.js");
 const express = require("express");
 const Caver = require("caver-js");
