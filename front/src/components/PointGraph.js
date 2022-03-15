@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import TotalPoint from "./TotalPoint";
 
-export default function TransactionsChart() {
+export default function PointGraph() {
   //날짜별 포인트 변화를 꺾은 선 그래프로 보여주는 컴포넌트
   var chartdata;
   var moment = require("moment");

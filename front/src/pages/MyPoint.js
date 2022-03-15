@@ -3,7 +3,7 @@ import { useState } from "react";
 import MyPointAll from "../components/MyPointAll";
 import MyPointSend from "../components/MyPointSend";
 import MyPointReceive from "../components/MyPointReceive";
-import TransactionsChart from "../components/TransactionsChart";
+import PointGraph from "../components/PointGraph";
 
 function MyPoint() {
   // 내 트랜잭션의 모든 내역, 받은 내역, 사용 내역을 볼 수 있는 페이지
@@ -21,7 +21,7 @@ function MyPoint() {
         marginBottom={5}
         marginTop={5}
       >
-        <TransactionsChart />
+        <PointGraph />
       </VStack>
       <HStack>
         <Box
