@@ -13,24 +13,6 @@
              <li>back/config/database.js 파일에서 각자의 로컬 mysql 비밀번호로 수정  <br>
              <li>back 폴더에서 npm start 후 front 폴더에서 npm start   <br>
         </ul> <br>
-*  **진행 사항** 
-    * Flask 코드 Express로 전환 완료
-    * React에서 Express를 통해 axios로 DB데이터 들고 오기 완료<br>
-
-*  **필요 기능**   
-    - [ ] 학교 통합 로그인 기능 구현
-    - [ ] 제휴 사이트에서 3rd-party 로서 포인트 제공 기능 구현
-    - [ ] 가능하다면 3rd-party에서 Optional로 
-    신뢰성 보장을 위한 블록체인 사용(메타마스크 연계)로서의 웹사이트 기능 분리
-    - [ ] My 거래내역 페이지 그래프 구현(DB 수정 필요)  
-    - [ ] 전체 거래 내역 페이지 완전 재구성  
-        (Block들이 실제로 Transaction 되었는지 확인 할 수 있는 페이지로 재구성 DB 수정 필요)
-    - [ ] IPFS 저장 후 일정 주기 별로 Transaction 보내기 기능 구현 <br>
-
- * **DB 상태**  <br> 
-
-    <img src="https://user-images.githubusercontent.com/37110949/148679520-5216656b-f02d-4397-844e-c294d19a75d7.PNG" width ="300px" height="100px"><br>
-
-    <img src="https://user-images.githubusercontent.com/37110949/148679585-f47ed9ea-4fa2-411d-9897-5f440d68a825.png" width ="300px" height="300px">   
-    <img src="https://user-images.githubusercontent.com/37110949/148679604-fca82a68-764f-43cb-a949-e2191627e67c.png" width ="300px" height="300px">
-    <img src="https://user-images.githubusercontent.com/37110949/151037840-d43d1cd0-6de3-4869-8acc-7cba5986de8c.png" width ="300px" height="300px">
+        
+*  **Detail**  <br>  
+https://bald-snake-e2f.notion.site/Kingo-DashBoard-Website-21d0c76a30614c29a5df7cf2999ac4b5?pvs=4
